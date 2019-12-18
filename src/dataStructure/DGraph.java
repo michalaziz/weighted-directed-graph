@@ -7,7 +7,7 @@ public class DGraph implements graph{
 	@Override
 	public node_data getNode(int key) {
 		// TODO Auto-generated method stub
-		return null;
+		return null ;
 	}
 
 	@Override
