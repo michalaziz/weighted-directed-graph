@@ -1,43 +1,43 @@
 package dataStructure;
 
 public class Edge implements edge_data{
-	
+
 	Node src; 
 	Node dest;
 	double weight;
 	int tag;
-	
+
 	Edge(Node s, Node d, double w, int t)
 	{
-		this.src= new Node(s);
-		this.dest=new Node(d);
+		this.src= s;
+		this.dest=d;
 		this.weight=w;
 		this.tag=t;
-		
+
 	}
-	
+
 	Edge(Edge e)
 	{
-		//this.src=
+		this.src=e.src;
+		this.dest=e.dest;
+		this.weight=e.weight;
+		this.tag=e.tag;
 	}
-	
+
 
 	@Override
 	public int getSrc() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.src.getKey();
 	}
 
 	@Override
 	public int getDest() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.dest.getKey();
 	}
 
 	@Override
 	public double getWeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.weight;
 	}
 
 	@Override
@@ -49,19 +49,17 @@ public class Edge implements edge_data{
 	@Override
 	public void setInfo(String s) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public int getTag() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.tag;
 	}
 
 	@Override
 	public void setTag(int t) {
-		// TODO Auto-generated method stub
-		
+		this.tag=t;
 	}
 
 }
