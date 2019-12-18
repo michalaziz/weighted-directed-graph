@@ -1,13 +1,36 @@
 package dataStructure;
 
+import java.awt.List;
+import java.util.ArrayList;
+
+//import com.sun.tools.classfile.Opcode.Set;
+
 import utils.Point3D;
 
 public class Node implements node_data {
 
 	int key;
 	Point3D location;
-	double weight;
-
+	double weight= Double.MAX_VALUE;
+	int tag;
+	ArrayList<Node> neib =new ArrayList<Node>();
+	
+	Node(int k, Point3D p, double w,int t, ArrayList l)
+	{
+		this.key=k;
+		this.location=p;
+		this.weight=w;
+		this.tag=t;
+		this.neib=l;
+	}
+	Node(Node node)
+	{
+		this.key=node.key;
+		this.location=node.location;
+		this.weight=node.weight;
+		this.tag=node.tag;
+		this.neib=node.neib;
+	}
 	@Override
 	public int getKey() {
 		return this.key;
@@ -15,14 +38,12 @@ public class Node implements node_data {
 
 	@Override
 	public Point3D getLocation() {
-		if(location!=null)////////not sure/////////
-			return this.location;
-		return null;
+		return this.location;
 	}
 
 	@Override
 	public void setLocation(Point3D p) {
-		this.location=new Point3D(p);
+		this.location=p;
 	}
 
 	@Override
@@ -49,13 +70,12 @@ public class Node implements node_data {
 
 	@Override
 	public int getTag() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.tag;
 	}
 
 	@Override
 	public void setTag(int t) {
-		// TODO Auto-generated method stub
+		this.tag=t;
 
 	}
 
