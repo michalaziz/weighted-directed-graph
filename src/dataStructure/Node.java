@@ -79,4 +79,13 @@ public class Node implements node_data {
 
 	}
 
+	public static void main(String [] args)
+	{
+		Point3D p =new Point3D(1,2,3);
+		ArrayList<Integer> neighbors =new ArrayList<Integer>();
+		neighbors.add(2);
+		Node n= new Node(4,p,1,0,neighbors);
+		Node n2= n;
+		System.out.println(n2);
+	}
 }
