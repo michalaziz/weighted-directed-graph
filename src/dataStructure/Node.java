@@ -1,36 +1,36 @@
 package dataStructure;
 
-import java.awt.List;
-import java.util.ArrayList;
-
-//import com.sun.tools.classfile.Opcode.Set;
-
+//import java.util.HashMap;
 import utils.Point3D;
+
 
 public class Node implements node_data {
 
-	int key;
-	Point3D location;
-	double weight= Double.MAX_VALUE;
-	int tag;
-	ArrayList<Node> neib =new ArrayList<Node>();
+	 private int key,tag;
+	 private static int counterID=0;
+	 private Point3D location;
+	 private double weight= Double.MAX_VALUE;
+	 private String info;
+	//HashMap<Integer,Edge>fromNode= new HashMap<Integer,Edge>();
+
 	
-	Node(int k, Point3D p, double w,int t, ArrayList l)
+	public Node( int tag, Point3D p,double weight, String info )
 	{
-		this.key=k;
+		this.key=counterID++;
 		this.location=p;
-		this.weight=w;
-		this.tag=t;
-		this.neib=l;
+		this.weight=weight;
+		this.tag=tag;
+		this.info=info;
 	}
-	Node(Node node)
+	public Node()
 	{
-		this.key=node.key;
-		this.location=node.location;
-		this.weight=node.weight;
-		this.tag=node.tag;
-		this.neib=node.neib;
+		this.key=counterID++;
+		this.tag=0;
+		this.location=null;
+		this.weight=0;
+		this.info=null;
 	}
+	
 	@Override
 	public int getKey() {
 		return this.key;
@@ -43,7 +43,9 @@ public class Node implements node_data {
 
 	@Override
 	public void setLocation(Point3D p) {
-		this.location=p;
+		Point3D newP= new Point3D (p);
+		this.location=newP;
+		
 	}
 
 	@Override
@@ -58,14 +60,12 @@ public class Node implements node_data {
 
 	@Override
 	public String getInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.info;
 	}
 
 	@Override
 	public void setInfo(String s) {
-		// TODO Auto-generated method stub
-
+		this.info=s;
 	}
 
 	@Override
@@ -81,11 +81,6 @@ public class Node implements node_data {
 
 	public static void main(String [] args)
 	{
-		Point3D p =new Point3D(1,2,3);
-		ArrayList<Integer> neighbors =new ArrayList<Integer>();
-		neighbors.add(2);
-		Node n= new Node(4,p,1,0,neighbors);
-		Node n2= n;
-		System.out.println(n2);
+		
 	}
 }
