@@ -7,16 +7,15 @@ import utils.Point3D;
 public class Node implements node_data {
 
 	 private int key,tag;
-	 private static int counterID=0;
 	 private Point3D location;
 	 private double weight= Double.MAX_VALUE;
 	 private String info;
 	//HashMap<Integer,Edge>fromNode= new HashMap<Integer,Edge>();
 
 	
-	public Node( int tag, Point3D p,double weight, String info )
+	public Node( int k,int tag, Point3D p,double weight, String info )
 	{
-		this.key=counterID++;
+		this.key=k;
 		this.location=p;
 		this.weight=weight;
 		this.tag=tag;
@@ -24,7 +23,7 @@ public class Node implements node_data {
 	}
 	public Node()
 	{
-		this.key=counterID++;
+		this.key=0;//maybe we will get node with key 0 so 0 is not the default
 		this.tag=0;
 		this.location=null;
 		this.weight=0;
@@ -77,10 +76,5 @@ public class Node implements node_data {
 	public void setTag(int t) {
 		this.tag=t;
 
-	}
-
-	public static void main(String [] args)
-	{
-		
 	}
 }
