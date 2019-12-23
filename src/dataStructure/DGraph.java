@@ -65,48 +65,22 @@ public class DGraph implements graph{
 	@Override
 	public void connect(int src, int dest, double w) {
 		edge_data e= new Edge(src,dest,w);
-		if(hmE.get(src).containsKey(dest))//check if the edge is already exist
-			throw new RuntimeException("the edge("+src+","+dest+") is already exist");
-		hmE.get(src).put(dest, e);
+		if(w<0)
+			throw new RuntimeException("the weight is negative");
+		if(src==dest)
+			throw new RuntimeException("The keys are equal,it's the same vertex");
+		if(hmE.get(src)==null) //creat the new edge
+		{
+			hmE.put(src, new HashMap<Integer,edge_data>());
+			edgeSize++;
+			hmE.get(src).put(dest,e);//connect the edge
+		}
+		else {//the edge is exist just connect the nodes
+			hmE.get(src).put(dest, e);
+			edgeSize++;
+		}
 		MC++;
-		nodeSize++;
 	}
-
-
-	//		if(this.getNode(src)!=null && this.getNode(dest)!=null)
-	//		{
-	//			if(src!=dest)//check if the key's src and dest are different.
-	//			{
-	//				if(this.getEdge(src, dest)==null)//check if the edge exist
-	//				{
-	//					if(w>=0)// check if the weight negative
-	//					{
-	//						this.hmE.get(src).put(dest,e); // add e to hmE 
-	//						this.MC++;
-	//						this.edgeSize++;
-	//					}
-	//					else {throw new RuntimeException("Edge has no negative weight");}
-	//				}
-	//				else //???????//need to check this!///////
-	//				{
-	//					this.hmE.get(src).put(dest,e);
-	//					this.MC++;
-	//				} 
-	//			} 
-	//			else{throw new RuntimeException("The keys are equal,it's the same vertex");}
-	//		}
-	//		else 
-	//		{
-	//			if(this.getNode(src)==null && w>=0)
-	//			{
-	//				HashMap<Integer,edge_data>edges=new HashMap <Integer,edge_data>();
-	//				this.hmE.put(src,edges);
-	//				this.hmE.get(src).put(dest,e);
-	//				this.MC++;
-	//				this.edgeSize++;
-	//				this.nodeSize++;
-	//			}
-	//		}
 
 	@Override
 	public Collection<node_data> getV() {

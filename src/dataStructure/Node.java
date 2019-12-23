@@ -6,7 +6,8 @@ import utils.Point3D;
 
 public class Node implements node_data {
 
-	 private int key,tag;
+	 private int key;
+	 private int tag;
 	 private Point3D location;
 	 private double weight= Double.MAX_VALUE;
 	 private String info;
