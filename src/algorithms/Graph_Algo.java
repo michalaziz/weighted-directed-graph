@@ -1,7 +1,11 @@
 package algorithms;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
+import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
 /**
@@ -11,29 +15,48 @@ import dataStructure.node_data;
  *
  */
 public class Graph_Algo implements graph_algorithms{
+	private graph graph;
 
 	@Override
 	public void init(graph g) {
-		// TODO Auto-generated method stub
-		
+		this.graph=g;	
 	}
 
 	@Override
 	public void init(String file_name) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void save(String file_name) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean isConnected() {
-		// TODO Auto-generated method stub
-		return false;
+		Collection<node_data> vertex = this.graph.getV();
+		ArrayList<Integer> arrSrc=new ArrayList();
+		ArrayList<Integer> arrDest=new ArrayList();
+		Iterator<node_data> iterV=vertex.iterator();
+		for(int i=0; i<vertex.size();i++)
+		{
+			Collection<edge_data> edges = graph.getE(iterV.next().getKey());
+			Iterator<edge_data> iterE=edges.iterator();
+			for(int j=0; j<edges.size(); j++)
+			{
+				arrSrc.add(iterE.next().getSrc());
+				arrDest.add(iterE.next().getDest());
+			}
+		}
+		Iterator<node_data> iterV2=vertex.iterator();
+		for(int i=0; i<vertex.size(); i++)
+		{
+			if(!arrSrc.contains(iterV2.next().getKey())||!arrDest.contains(iterV2.next().getKey()))
+				return false;
+		}
+		return true;
 	}
 
 	@Override

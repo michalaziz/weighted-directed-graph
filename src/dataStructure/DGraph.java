@@ -96,6 +96,8 @@ public class DGraph implements graph{
 	 */
 	@Override
 	public node_data removeNode(int key) {
+		if(hmN.get(key)==null)
+			return null;
 		node_data remove_node=hmN.remove(key);
 		hmE.remove(key);
 		for(int i=0; i<hmN.keySet().size(); i++)
