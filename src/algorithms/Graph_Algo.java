@@ -46,28 +46,30 @@ public class Graph_Algo implements graph_algorithms{
 	@Override
 	public boolean isConnected() {
 		Collection<node_data> vertex = this.graph_A.getV();
+		if(vertex.size()==1)
+			return true;
+		if(vertex.size()==0)
+			throw new RuntimeException("no vertex");
 		ArrayList<Integer> arrSrc=new ArrayList();
 		ArrayList<Integer> arrDest=new ArrayList();
 		Iterator<node_data> iterV=vertex.iterator();
-		
 		for(int i=0; i<vertex.size();i++)
 		{
 			node_data tempV=iterV.next();
 			Collection<edge_data> edges = graph_A.getE(tempV.getKey());
+			if(edges==null)
+				return false;
 			Iterator<edge_data> iterE=edges.iterator();
 			for(int j=0; j<edges.size(); j++)
 			{
-				if(!iterE.hasNext())
-					return false;
 				edge_data tempE= iterE.next();
 				arrSrc.add(tempE.getSrc());
 				arrDest.add(tempE.getDest()); 
-				// עשינו נקסט שורה מעל ולכן כשנעשה שוב נקסט תהיה גלישה לכן הוספנו משתנה וככה עושים נקסט רק פעם אחת
 			}
 		}
 		Iterator<node_data> iterV2=vertex.iterator();
 		for(int i=0; i<vertex.size(); i++)
-		{//no such element
+		{
 			node_data tempV2=iterV2.next();
 			if(!arrSrc.contains(tempV2.getKey())||!arrDest.contains(tempV2.getKey()))
 				return false;
@@ -77,7 +79,7 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 
@@ -98,9 +100,4 @@ public class Graph_Algo implements graph_algorithms{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	public static void main(String args[]) {
-		
-	}
-
 }

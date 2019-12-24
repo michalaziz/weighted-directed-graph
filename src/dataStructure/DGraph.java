@@ -93,9 +93,12 @@ public class DGraph implements graph{
 
 	@Override
 	public Collection<edge_data> getE(int node_id) {
-		if(hmE.size()==0)
+		try {
+			return this.hmE.get(node_id).values();
+		}catch(Exception e){
 			return null;
-		return this.hmE.get(node_id).values();
+		}
+		
 	}
 	/**
 	 * remove the node with the key the we'v got and all the edges that connect to this key 
