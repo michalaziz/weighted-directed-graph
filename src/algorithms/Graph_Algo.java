@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import dataStructure.DGraph;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
@@ -15,11 +16,19 @@ import dataStructure.node_data;
  *
  */
 public class Graph_Algo implements graph_algorithms{
-	private graph graph;
+	private graph graph_A;
 
+	Graph_Algo()
+	{
+		this.graph_A=null;
+	}
+	
+	public Graph_Algo(DGraph g){
+		this.graph_A=g;
+	}
 	@Override
 	public void init(graph g) {
-		this.graph=g;	
+		this.graph_A=g;	
 	}
 
 	@Override
@@ -36,24 +45,31 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public boolean isConnected() {
-		Collection<node_data> vertex = this.graph.getV();
+		Collection<node_data> vertex = this.graph_A.getV();
 		ArrayList<Integer> arrSrc=new ArrayList();
 		ArrayList<Integer> arrDest=new ArrayList();
 		Iterator<node_data> iterV=vertex.iterator();
+		
 		for(int i=0; i<vertex.size();i++)
 		{
-			Collection<edge_data> edges = graph.getE(iterV.next().getKey());
+			node_data tempV=iterV.next();
+			Collection<edge_data> edges = graph_A.getE(tempV.getKey());
 			Iterator<edge_data> iterE=edges.iterator();
 			for(int j=0; j<edges.size(); j++)
 			{
-				arrSrc.add(iterE.next().getSrc());
-				arrDest.add(iterE.next().getDest());
+				if(!iterE.hasNext())
+					return false;
+				edge_data tempE= iterE.next();
+				arrSrc.add(tempE.getSrc());
+				arrDest.add(tempE.getDest()); 
+				// עשינו נקסט שורה מעל ולכן כשנעשה שוב נקסט תהיה גלישה לכן הוספנו משתנה וככה עושים נקסט רק פעם אחת
 			}
 		}
 		Iterator<node_data> iterV2=vertex.iterator();
 		for(int i=0; i<vertex.size(); i++)
-		{
-			if(!arrSrc.contains(iterV2.next().getKey())||!arrDest.contains(iterV2.next().getKey()))
+		{//no such element
+			node_data tempV2=iterV2.next();
+			if(!arrSrc.contains(tempV2.getKey())||!arrDest.contains(tempV2.getKey()))
 				return false;
 		}
 		return true;
@@ -81,6 +97,10 @@ public class Graph_Algo implements graph_algorithms{
 	public graph copy() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public static void main(String args[]) {
+		
 	}
 
 }

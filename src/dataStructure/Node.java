@@ -7,14 +7,14 @@ import utils.Point3D;
 public class Node implements node_data {
 
 	 private int key;
+	 private double weight= Double.MAX_VALUE;
 	 private int tag;
 	 private Point3D location;
-	 private double weight= Double.MAX_VALUE;
 	 private String info;
 	//HashMap<Integer,Edge>fromNode= new HashMap<Integer,Edge>();
 
 	
-	public Node( int k,int tag, Point3D p,double weight, String info )
+	public Node( int k,double weight,int tag, Point3D p, String info )
 	{
 		this.key=k;
 		this.location=p;
