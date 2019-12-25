@@ -1,5 +1,6 @@
 package algorithms;
 
+import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,7 +19,7 @@ import dataStructure.node_data;
 public class Graph_Algo implements graph_algorithms{
 	private graph graph_A;
 
-	Graph_Algo()
+	public Graph_Algo()
 	{
 		this.graph_A=null;
 	}
@@ -33,7 +34,8 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public void init(String file_name) {
-		// TODO Auto-generated method stub
+		BufferedReader br=null;
+		
 
 	}
 
@@ -79,10 +81,42 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		
-		return 0;
+		Collection<node_data> vertex = this.graph_A.getV();
+		Iterator<node_data> iterV=vertex.iterator();
+	    node_data srcCurrent= this.graph_A.getNode(src);
+	    srcCurrent.setTag(0);
+	    node_data desT= this.graph_A.getNode(dest);
+		while(iterV.hasNext())
+		{
+			iterV.next().setTag(0);
+			iterV.next().setWeight( Double.MAX_VALUE);
+		}
+		Dijkstra(srcCurrent,desT);
+		return this.graph_A.getNode(dest).getWeight();
 	}
 
+	public void Dijkstra(node_data src, node_data dest)
+	{
+	 if(src.getKey()==dest.getKey() || src.getTag()==1)
+	 {
+		 return;
+	 }
+		Collection<edge_data> srcEout = this.graph_A.getE(src.getKey());
+		Iterator<edge_data> iterE=srcEout.iterator();
+
+	 while(src.getTag()==0 && iterE!=null && iterE.hasNext())
+	 {
+		if(this.graph_A.getNode(iterE.next().getDest()).getWeight()>this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
+		this.graph_A.getNode(iterE.next().getDest()).setWeight(this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
+	 
+	    src.setTag(1);
+	    srcEout=this.graph_A.getE(iterE.next().getDest());
+	    //צריך לעבור על רשימת הצלעות ולראות לאיזה קודקוד יש משקל הכי נמוך ואותו לשים בקולקשן הצלעות החדש
+	 }
+	 }
+	
+	
+	
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
 		// TODO Auto-generated method stub
