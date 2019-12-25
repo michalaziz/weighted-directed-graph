@@ -1,10 +1,12 @@
 package dataStructure;
 
+import java.io.Serializable;
+
 //import java.util.HashMap;
 import utils.Point3D;
 
 
-public class Node implements node_data {
+public class Node implements node_data,Serializable {
 
 	 private int key;
 	 private double weight= Double.MAX_VALUE;

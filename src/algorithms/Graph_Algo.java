@@ -1,6 +1,16 @@
 package algorithms;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -16,7 +26,7 @@ import dataStructure.node_data;
  * @author 
  *
  */
-public class Graph_Algo implements graph_algorithms{
+public class Graph_Algo implements graph_algorithms,Serializable{
 	private graph graph_A;
 
 	public Graph_Algo()
@@ -34,15 +44,41 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public void init(String file_name) {
-		BufferedReader br=null;
+		graph g= this.graph_A;
+	    File f= new File (file_name); 
+		try {
+			FileInputStream fis= new FileInputStream(f);
+			ObjectInputStream ois= new ObjectInputStream(fis);
+			g= (graph) ois.readObject();
+		} catch (FileNotFoundException e) {
 		
-
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	    
 	}
 
 	@Override
 	public void save(String file_name) {
-		// TODO Auto-generated method stub
-
+		graph graph= this.graph_A;
+	    File f= new File (file_name); 
+	    try 
+	    {
+			FileOutputStream fos= new FileOutputStream(f);
+			ObjectOutputStream oos= new ObjectOutputStream(fos);
+			oos.writeObject(graph);
+		} 
+	    catch (FileNotFoundException e)
+	    {
+			System.out.println("file not found");
+		} catch (IOException e) {
+		
+			e.printStackTrace();
+		}
+	    
 	}
 
 	@Override
@@ -111,7 +147,7 @@ public class Graph_Algo implements graph_algorithms{
 	 
 	    src.setTag(1);
 	    srcEout=this.graph_A.getE(iterE.next().getDest());
-	  
+	    //צריך לעבור על רשימת הצלעות ולראות לאיזה קודקוד יש משקל הכי נמוך ואותו לשים בקולקשן הצלעות החדש
 	 }
 	 }
 	
@@ -131,7 +167,9 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public graph copy() {
-		// TODO Auto-generated method stub
-		return null;
+		Graph_Algo gC= new Graph_Algo();
+		this.save("temp.txt");
+		gC.init("temp.txt");
+		return gC.graph_A;
 	}
 }
