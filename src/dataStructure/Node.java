@@ -20,7 +20,8 @@ public class Node implements node_data {
 		this.location=p;
 		this.weight=weight;
 		this.tag=tag;
-		this.info=info;
+		this.info=String.valueOf(key);
+		
 	}
 	public Node()
 	{
@@ -30,7 +31,13 @@ public class Node implements node_data {
 		this.weight=0;
 		this.info=null;
 	}
-	
+    public Node(Node n){
+        this.key=n.key;
+        this.tag= n.tag;
+        this.weight=n.weight;
+        this.location= new Point3D(n.location);
+        this.info=n.info;
+    }
 	@Override
 	public int getKey() {
 		return this.key;
