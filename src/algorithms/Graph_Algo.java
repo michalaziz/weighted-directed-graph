@@ -26,7 +26,7 @@ import dataStructure.node_data;
  * @author 
  *
  */
-public class Graph_Algo implements graph_algorithms,Serializable{
+public class Graph_Algo implements graph_algorithms{
 	private graph graph_A;
 
 	public Graph_Algo()
