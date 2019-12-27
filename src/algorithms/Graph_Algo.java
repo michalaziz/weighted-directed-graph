@@ -276,7 +276,5 @@ public class Graph_Algo implements graph_algorithms{
 		System.out.println(check.isConnected());
 
 	
-
-	
 	}
 }
