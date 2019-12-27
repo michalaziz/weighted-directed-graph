@@ -3,11 +3,9 @@ import java.util.HashMap;
 
 import algorithms.Graph_Algo;
 import utils.Point3D;
-
-import java.io.Serializable;
 import java.util.Collection;
 
-public class DGraph implements graph,Serializable{
+public class DGraph implements graph{
 
 	HashMap<Integer,node_data> hmN = new HashMap<>();
 	HashMap<Integer,HashMap<Integer,edge_data>> hmE = new HashMap<>();	
