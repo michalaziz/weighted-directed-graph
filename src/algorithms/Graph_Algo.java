@@ -105,77 +105,25 @@ public class Graph_Algo implements graph_algorithms{
 	    return true;
 	}
 		
-		
-		
-		
-//		Collection<node_data> vertex = this.graph_A.getV();
-//		if(vertex.size()==1)
-//			return true;
-//		if(vertex.size()==0)
-//			throw new RuntimeException("no vertex");
-//		ArrayList<Integer> arrSrc=new ArrayList();
-//		ArrayList<Integer> arrDest=new ArrayList();
-//		Iterator<node_data> iterV=vertex.iterator();
-//		for(int i=0; i<vertex.size();i++)
-//		{
-//			node_data tempV=iterV.next();
-//			Collection<edge_data> edges = graph_A.getE(tempV.getKey());
-//			if(edges==null)
-//				return false;
-//			Iterator<edge_data> iterE=edges.iterator();
-//			for(int j=0; j<edges.size(); j++)
-//			{
-//				edge_data tempE= iterE.next();
-//				arrSrc.add(tempE.getSrc());
-//				arrDest.add(tempE.getDest()); 
-//			}
-//		}
-//		Iterator<node_data> iterV2=vertex.iterator();
-//		for(int i=0; i<vertex.size(); i++)
-//		{
-//			node_data tempV2=iterV2.next();
-//			if(!arrSrc.contains(tempV2.getKey())||!arrDest.contains(tempV2.getKey()))
-//				return false;
-//		}
-//		return true;
 	
-
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		Collection<node_data> vertex = this.graph_A.getV();
 		Iterator<node_data> iterV=vertex.iterator();
+		node_data desT= this.graph_A.getNode(dest);
 	    node_data srcCurrent= this.graph_A.getNode(src);
-	    srcCurrent.setTag(0);
-	    node_data desT= this.graph_A.getNode(dest);
+	   
 		while(iterV.hasNext())
 		{
 			iterV.next().setTag(0);
-			iterV.next().setWeight( Double.MAX_VALUE);
+			iterV.next().setWeight(Double.MAX_VALUE);
 		}
+		srcCurrent.setWeigth(0);
+		
 		Dijkstra(srcCurrent,desT);
 		return this.graph_A.getNode(dest).getWeight();
 	}
 
-	public void Dijkstra(node_data src, node_data dest)
-	{
-	 if(src.getKey()==dest.getKey() || src.getTag()==1)
-	 {
-		 return;
-	 }
-		Collection<edge_data> srcEout = this.graph_A.getE(src.getKey());
-		Iterator<edge_data> iterE=srcEout.iterator();
-
-	 while(src.getTag()==0 && iterE!=null && iterE.hasNext())
-	 {
-		if(this.graph_A.getNode(iterE.next().getDest()).getWeight()>this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
-		this.graph_A.getNode(iterE.next().getDest()).setWeight(this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
-	 
-	    src.setTag(1);
-	    srcEout=this.graph_A.getE(iterE.next().getDest());
-	    //צריך לעבור על רשימת הצלעות ולראות לאיזה קודקוד יש משקל הכי נמוך ואותו לשים בקולקשן הצלעות החדש
-	 }
-	 }
-	
 	
 	
 	@Override
@@ -199,7 +147,7 @@ public class Graph_Algo implements graph_algorithms{
 	}
 	
 	
-	//helper functions to implement the algorithms
+	/////////////////////helper functions to implement the algorithms//////////////////////
 	
 	
 	//set the all vetrex's tags to 0
@@ -237,6 +185,43 @@ public class Graph_Algo implements graph_algorithms{
 	}
 	
 	
+	public void Dijkstra(node_data src, node_data dest)
+	{
+//	 if(src.getKey()==dest.getKey() || src.getTag()==1)
+//	 {
+//		 return;
+//	 }
+		node_data temp=this.graph_A.getNode(src);
+		Collection<edge_data> srcEout = this.graph_A.getE(temp.getKey());
+		Iterator<edge_data> iterE=srcEout.iterator();
+        int arr[] nextMin= new int [srcEout.size];
+        int i=0, length=nextMin.length;
+	 while(temp.getTag()==0 && iterE!=null)
+	 {
+		 while (length>0)
+		 {
+			 if(this.graph_A.getNode(iterE.next().getDest()).getWeight()>this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
+				this.graph_A.getNode(iterE.next().getDest()).setWeight(this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
+				nextMin[i]=this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
+				length--;
+		 }
+	    temp.setTag(1);   
+	    temp=this.graph_A.getNode(findMin(nextMin)); 
+	    srcEout=this.graph_A.getE(temp.getKey());
+	    nextMin= new int [srcEout.size];
+	    length= nextMin.length;
+	 }
+	 }
+	
+	private int findMin (int arr [])
+	{
+		int min=arr[0];
+		for(int i=1; i<=arr.length-1; i++)
+		{
+			if(arr[i]<min) {min=arr[i];}
+		}
+		return min;
+	}
 	
 	
 	public static void main(String args[])
@@ -274,6 +259,7 @@ public class Graph_Algo implements graph_algorithms{
 	
 		Graph_Algo check = new Graph_Algo(d1);
 		System.out.println(check.isConnected());
+
 	
 	}
 }

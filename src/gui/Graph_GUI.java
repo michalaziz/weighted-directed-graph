@@ -21,72 +21,184 @@ import dataStructure.graph;
 import utils.Point3D;
 import utils.StdDraw;
 
-public class Graph_GUI extends JFrame implements ActionListener {
-	graph graph_gui =new DGraph();
-	LinkedList<Point3D> points = new LinkedList<Point3D>();
-
-	Graph_GUI(graph g)
+public class Graph_GUI extends JFrame implements ActionListener, MouseListener,Serializable {
+	private graph graph_gui ;
+    private Graph_Algo gAlgo;
+    //LinkedList<Point3D> points = new LinkedList<Point3D>();
+	
+	public Graph_GUI(graph g)
 	{
+		
 		this.graph_gui=g;
-		this.initGUI();
+		this.gAlgo.init(g);
+		initGUI();
+//		this.graph_gui=g;
+//		this.initGUI();
 
 	}
 
-	Graph_GUI()
+	public Graph_GUI()
 	{
 		initGUI();
 	}
 
 	private void initGUI() 
 	{
-		StdDraw.setCanvasSize(400,400);
-		this.drawPoints();
-		this.drawEdges();
+//		StdDraw.setCanvasSize(400,400);
+//		this.drawPoints();
+//		this.drawEdges();
+		
+		
+		this.setSize(500, 500);
+		this.setVisible(true);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
+		MenuBar menuBar = new MenuBar();
+		
+		//menu for draw,save,download
+		Menu menu = new Menu("File");
+		menuBar.add(menu);
+		this.setMenuBar(menuBar);
+		
+		MenuItem save = new MenuItem("Save");
+		save.addActionListener(this);
+		
+		MenuItem paint = new MenuItem("Paint");
+		paint.addActionListener(this);
+		
+		MenuItem download = new MenuItem("Download");
+		download.addActionListener(this);
+		
+		
+		menu.add(paint);
+		menu.add(save);
+		menu.add(download);
+		
+		//menu for algorithms
+		Menu menu1=new Menu("Algorithms");
+		menuBar.add(menu1);
+		this.setMenuBar(menuBar);
+		
+		MenuItem isConnect = new MenuItem("isConnected");
+		isConnect.addActionListener(this);
+		
+		MenuItem tsp = new MenuItem("TSP");
+		tsp.addActionListener(this);
+		
+		MenuItem shortPath = new MenuItem("shortestPathDis");
+		shortPath.addActionListener(this);
+		
+//		MenuItem shortPath1 = new MenuItem("shortestPath");
+//		shortPath1.addActionListener(this);
+		
+		menu1.add(isConnect);
+		menu1.add(tsp);
+		menu1.add(shortPath);
+	//	menu1.add(shortPath1);
+
+		this.addMouseListener(this);
+		
+		
 	}
 
 	public void paint(Graphics g)
 	{
 		super.paint(g);
-
-		Point3D prev = null;
-
-		for (Point3D p : points) 
+		Collection<node_data> nodes =graph_gui.getV();
+		Iterator <node_data> it= nodes.iterator();
+		while(it.hasNext())
 		{
+			node_data node= it.next();
+			Point3D point= node.getLocation();
 			g.setColor(Color.BLUE);
-			g.fillOval((int)p.x(), (int)p.y(), 10, 10);
-
-			if(prev != null)
+			g.fillOval((point.x(),point.y(), 10, 10);
+    		g.drawString("" + node.getKey(), point.x(), point.y());
+			Collection<node_data> edges =graph_gui.getE(node.getkey());
+			Iterator <edge_data> it1= edges.iterator();
+             
+			while(it1.hadNext)
 			{
 				g.setColor(Color.RED);
-				g.drawLine((int)p.x(), (int)p.y(), 
-						(int)prev.x(), (int)prev.y());
-
-				g.drawString("5", (int)((p.x()+prev.x())/2),(int)((p.y()+prev.y())/2));
+				edge_data edge= it1.next();
+				node_data node1=this.graph_gui.getNode(edge.getDest());
+				Point3D point1= node1.getLocation();
+				g.drawLine(point.x(),point.y(),point1.x(),point1.y());
+				g.drawString("",edge.getWei (int)((p.x()+prev.x())/2),(int)((p.y()+prev.y())/2));
+				g.drawString(""+ e.getWeight(),(point.x()+point1.getLocation().x())/2,(point.y()+point1.getLocation().y())/2);
+				g.setColor(Color.PINK);
+				g.fillOval((point.x(),point.y(), 10, 10);
 			}
-
-			prev = p;
+		
 		}
-	}
+			 
+		
+		
+	
+		
+		
+//		super.paint(g);
+//
+//		Point3D prev = null;
+//
+//		for (Point3D p : points) 
+//		{
+//			g.setColor(Color.BLUE);
+//			g.fillOval((int)p.x(), (int)p.y(), 10, 10);
+//
+//			if(prev != null)
+//			{
+//				g.setColor(Color.RED);
+//				g.drawLine((int)p.x(), (int)p.y(), 
+//						(int)prev.x(), (int)prev.y());
+//
+//				g.drawString("5", (int)((p.x()+prev.x())/2),(int)((p.y()+prev.y())/2));
+//			}
+//
+//			prev = p;
+//		}
+	
 
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
 		String str = e.getActionCommand();
 
-		if(str.equals("Item 1"))
+		if(str.equals("Paint"))
 		{
-			Point3D p1 = new Point3D(100,100);
-			Point3D p2 = new Point3D(50,300);
-			Point3D p3 = new Point3D(400,150);
-
-			points.add(p1);
-			points.add(p2);
-			points.add(p3);
-
-			repaint();
+				
 		}
-
+		
+		if else (str.equals("Save"))
+		{
+				
+		}
+		
+		if else (str.equals("shortestPathDis"))
+		{
+				
+		}
+		
+		if else (str.equals("Download"))
+		{
+				
+		}
+		
+		if else (str.equals("TSP"))
+		{
+				
+		}
+		
+		if else (str.equals("isConnected"))
+		{
+				
+		}
+		
+//		else (str.equals("shortestPath"))
+//		{
+//				
+//		}
 	}
+	
 	public void drawPoints()
 	{
 		
@@ -164,3 +276,4 @@ public class Graph_GUI extends JFrame implements ActionListener {
 	}
 
 }
+
