@@ -123,7 +123,6 @@ public class Graph_GUI extends JFrame implements ActionListener, MouseListener,S
 				node_data node1=this.graph_gui.getNode(edge.getDest());
 				Point3D point1= node1.getLocation();
 				g.drawLine(point.x(),point.y(),point1.x(),point1.y());
-				g.drawString("",edge.getWei (int)((p.x()+prev.x())/2),(int)((p.y()+prev.y())/2));
 				g.drawString(""+ e.getWeight(),(point.x()+point1.getLocation().x())/2,(point.y()+point1.getLocation().y())/2);
 				g.setColor(Color.PINK);
 				g.fillOval((point.x(),point.y(), 10, 10);
