@@ -226,7 +226,7 @@ public class Graph_Algo implements graph_algorithms{
 	
 	public static void main(String args[])
 	{
-		Point3D x = new Point3D(1,2,3);
+		Point3D x = new Point3D(1,2,3); 
 		Point3D y = new Point3D(-1,-2,-3);
 		Point3D z = new Point3D(6,7,8);
 		Point3D w = new Point3D(6,7,8);

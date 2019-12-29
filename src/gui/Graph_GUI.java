@@ -130,7 +130,9 @@ public class Graph_GUI extends JFrame implements ActionListener, MouseListener,S
 		
 		}
 			 
-		
+		public void save(){
+			
+		}
 		
 	
 		
