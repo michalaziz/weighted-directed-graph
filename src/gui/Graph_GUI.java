@@ -7,6 +7,7 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import dataStructure.Node;
@@ -89,10 +90,10 @@ public class Graph_GUI extends JFrame implements ActionListener {
 	}
 	public void drawPoints()
 	{
-		
+
 		StdDraw.setXscale(50, -50);
 		StdDraw.setYscale(50,-50);
-		
+
 		Iterator<node_data> iter=  this.graph_gui.getV().iterator();
 		while(iter.hasNext())
 		{
@@ -111,12 +112,15 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		Iterator<node_data> iterN=  this.graph_gui.getV().iterator();
 		while(iterN.hasNext())
 		{
-			StdDraw.setPenRadius(0.003);
-			StdDraw.setPenColor(StdDraw.BLACK);
 			node_data tempV=iterN.next();
-			Iterator<edge_data> iterE=  this.graph_gui.getE(tempV.getKey()).iterator();
+			Collection<edge_data> edges = this.graph_gui.getE(tempV.getKey());
+			if(edges==null)
+				break;
+			Iterator<edge_data> iterE=edges.iterator();
 			while(iterE.hasNext())
 			{
+				StdDraw.setPenRadius(0.003);
+				StdDraw.setPenColor(StdDraw.BLACK);
 				edge_data tempE=iterE.next();
 				StdDraw.line(graph_gui.getNode(tempE.getSrc()).getLocation().x(),
 						graph_gui.getNode(tempE.getSrc()).getLocation().y(),
@@ -127,12 +131,12 @@ public class Graph_GUI extends JFrame implements ActionListener {
 				StdDraw.point(((graph_gui.getNode(tempE.getSrc()).getLocation().x()+
 						graph_gui.getNode(tempE.getDest()).getLocation().x()*7)/8),
 						((graph_gui.getNode(tempE.getSrc()).getLocation().y())+
-						graph_gui.getNode(tempE.getDest()).getLocation().y()*7)/8);
+								graph_gui.getNode(tempE.getDest()).getLocation().y()*7)/8);
 				StdDraw.setPenColor(StdDraw.BOOK_BLUE);
 				StdDraw.text(((graph_gui.getNode(tempE.getSrc()).getLocation().x()+
 						graph_gui.getNode(tempE.getDest()).getLocation().x())/2),
 						((graph_gui.getNode(tempE.getSrc()).getLocation().y())+
-						graph_gui.getNode(tempE.getDest()).getLocation().y())/2,
+								graph_gui.getNode(tempE.getDest()).getLocation().y())/2,
 						""+tempE.getWeight());
 			}
 		}
@@ -146,19 +150,27 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		Point3D x = new Point3D(0,30,0);
 		Point3D y = new Point3D(-30,-15,0);
 		Point3D z = new Point3D(30,-15,0);
+		Point3D w = new Point3D(0,-20,0);
+		Point3D q = new Point3D(0,15,0);
 
 		node_data a = new Node(1,3,2,x,"michal");
 		node_data b = new Node(2,4,3,y,"yarden");
 		node_data c = new Node(3,5,4,z,"sf");
+		node_data e = new Node(4,6,5,w,"sd");
+		//node_data f = new Node(5,7,6,q,"ssss");
 
 		DGraph d = new DGraph();
 		d.addNode(a);
 		d.addNode(b);
 		d.addNode(c);
+		d.addNode(e);
+//		d.addNode(f);
 		d.connect(a.getKey(),b.getKey(),1);
 		d.connect(b.getKey(),c.getKey(),2);
 		d.connect(c.getKey(),a.getKey(),3);
-
+		d.connect(c.getKey(),e.getKey(),4);
+		d.connect(e.getKey(),b.getKey(),4);
+		d.connect(e.getKey(),a.getKey(),4);
 		Graph_GUI gui = new Graph_GUI(d);
 
 	}
