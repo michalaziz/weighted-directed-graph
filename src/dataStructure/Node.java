@@ -1,5 +1,4 @@
 package dataStructure;
-
 import utils.Point3D;
 
 
@@ -10,7 +9,7 @@ public class Node implements node_data {
 	 private int tag;
 	 private Point3D location;
 	 private String info;
-	//HashMap<Integer,Edge>fromNode= new HashMap<Integer,Edge>();
+
 
 	
 	public Node( int k,double weight,int tag, Point3D p, String info )
@@ -19,7 +18,7 @@ public class Node implements node_data {
 		this.location=p;
 		this.weight=weight;
 		this.tag=tag;
-		this.info=String.valueOf(key);
+		this.info=null;
 		
 	}
 	public Node()

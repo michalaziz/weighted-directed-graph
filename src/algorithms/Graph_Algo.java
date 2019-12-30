@@ -11,40 +11,44 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Stack;
-
-import dataStructure.DGraph;
+import java.util.*;
+import dataStructure.*;
 import dataStructure.Node;
-import dataStructure.edge_data;
-import dataStructure.graph;
-import dataStructure.node_data;
 import utils.Point3D;
 /**
  * This empty class represents the set of graph-theory algorithms
  * which should be implemented as part of Ex2 - Do edit this class.
- * @author 
+ * @author Cohen yarden && Aziz michal
  *
  */
+
 public class Graph_Algo implements graph_algorithms{
 	private graph graph_A;
+	public static double infinity = Double.POSITIVE_INFINITY;
+
+    // constructors //
 
 	public Graph_Algo()
 	{
-		this.graph_A=null;
+		this.graph_A=new DGraph();
 	}
-	
-	public Graph_Algo(DGraph g){
+	public Graph_Algo(DGraph g) {
 		this.graph_A=g;
 	}
+
+	/**
+	 * Initialization this set of algorithms on parameter g.
+	 * @param g
+	 */
 	@Override
 	public void init(graph g) {
 		this.graph_A=g;	
 	}
 
+	/**
+	 * This function initialization a graph from file.
+	 * @param file_name
+	 */
 	@Override
 	public void init(String file_name) {
 		graph g= this.graph_A;
@@ -57,16 +61,18 @@ public class Graph_Algo implements graph_algorithms{
 			fis.close();
 			
 		} catch (FileNotFoundException e) {
-		
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
-	    
 	}
 
+	/**
+	 * This function saves the graph to a file.
+	 * @param file_name
+	 */
 	@Override
 	public void save(String file_name) {
 		graph graph= this.graph_A;
@@ -86,10 +92,12 @@ public class Graph_Algo implements graph_algorithms{
 		
 			e.printStackTrace();
 		}
-	    
 	}
 
-	
+	/**
+	 * This function checks whether the graph is a strong bond graph.
+	 * @return true <---> (if and only if) there is a valid path from every node to each other node.
+	 */
 	@Override
 	public boolean isConnected() {
 		
@@ -104,32 +112,59 @@ public class Graph_Algo implements graph_algorithms{
 	    }
 	    return true;
 	}
-		
-	
+
+	/**
+	 * The function calculates the shortest path between src and dest and return it.
+	 * The famous Dijkstra algorithm is used in this function as an helped function
+	 * @param src - start node
+	 * @param dest - end (target) node
+	 * @return
+	 */
 	@Override
 	public double shortestPathDist(int src, int dest) {
 		Collection<node_data> vertex = this.graph_A.getV();
 		Iterator<node_data> iterV=vertex.iterator();
 		node_data desT= this.graph_A.getNode(dest);
 	    node_data srcCurrent= this.graph_A.getNode(src);
-	   
+
 		while(iterV.hasNext())
 		{
-			iterV.next().setTag(0);
-			iterV.next().setWeight(Double.MAX_VALUE);
+			node_data n  = iterV.next();
+			n.setTag(0);
+			n.setWeight(Double.MAX_VALUE);
 		}
-		srcCurrent.setWeigth(0);
-		
+		srcCurrent.setWeight(0);
 		Dijkstra(srcCurrent,desT);
 		return this.graph_A.getNode(dest).getWeight();
 	}
 
-	
-	
+	/**
+	 * @param src - start node
+	 * @param dest - end (target) node
+	 * @return the shortest path between src to dest - as an ordered List of nodes, if there is no path
+	 * between theme the function throws exception
+	 */
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
-		// TODO Auto-generated method stub
-		return null;
+		this.shortestPathDist(src,dest);
+		if( this.graph_A.getNode(dest).getWeight() == Integer.MAX_VALUE)
+		{
+			throw new RuntimeException("there is no path between src and dest ! ");
+		}
+		ArrayList<node_data> res = new ArrayList<>();
+		node_data dest_node = this.graph_A.getNode(dest);
+		res.add(dest_node);
+        while(src!=dest_node.getKey())
+		{
+			dest_node=this.graph_A.getNode(Integer.parseInt(dest_node.getInfo()));
+			res.add(dest_node);
+		}
+		ArrayList<node_data> ans = new ArrayList<node_data>();
+        for(int j= res.size()-1; j>=0 ;j--)
+		{
+			ans.add(res.get(j));
+		}
+        return ans;
 	}
 
 	@Override
@@ -138,6 +173,10 @@ public class Graph_Algo implements graph_algorithms{
 		return null;
 	}
 
+	/**
+	 * This function compute a deep copy of this graph.
+	 * @return the copied graph.
+	 */
 	@Override
 	public graph copy() {
 		Graph_Algo gC= new Graph_Algo();
@@ -147,20 +186,21 @@ public class Graph_Algo implements graph_algorithms{
 	}
 	
 	
-	/////////////////////helper functions to implement the algorithms//////////////////////
+	///////////////////////////helper functions to implement the algorithms///////////////////////
 	
 	
 	//set the all vetrex's tags to 0
 	private void setTag_0(graph graph) {
 		Collection <node_data> v = graph.getV();
 		Iterator<node_data> it=v.iterator();
-		while(it.hasNext())
+		for(node_data n : v)
 		{
 			node_data node= (node_data) it.next();
 			node.setTag(0);
 		}
 	}
-	
+
+	// helper function for isConnected , used DFS algorithm.
 	public void dfsWithoutRecursion(node_data start) {
 	
 		Stack<node_data> stack = new Stack<node_data>();
@@ -184,82 +224,82 @@ public class Graph_Algo implements graph_algorithms{
 		
 	}
 	
-	
-	public void Dijkstra(node_data src, node_data dest)
+
+	public double Dijkstra(node_data src, node_data dest)
 	{
-//	 if(src.getKey()==dest.getKey() || src.getTag()==1)
-//	 {
-//		 return;
-//	 }
-		node_data temp=this.graph_A.getNode(src);
-		Collection<edge_data> srcEout = this.graph_A.getE(temp.getKey());
-		Iterator<edge_data> iterE=srcEout.iterator();
-        int arr[] nextMin= new int [srcEout.size];
-        int i=0, length=nextMin.length;
-	 while(temp.getTag()==0 && iterE!=null)
-	 {
-		 while (length>0)
-		 {
-			 if(this.graph_A.getNode(iterE.next().getDest()).getWeight()>this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
-				this.graph_A.getNode(iterE.next().getDest()).setWeight(this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
-				nextMin[i]=this.graph_A.getNode(iterE.next().getSrc()).getWeight() + iterE.next().getWeight());
-				length--;
-		 }
-	    temp.setTag(1);   
-	    temp=this.graph_A.getNode(findMin(nextMin)); 
-	    srcEout=this.graph_A.getE(temp.getKey());
-	    nextMin= new int [srcEout.size];
-	    length= nextMin.length;
-	 }
-	 }
-	
-	private int findMin (int arr [])
-	{
-		int min=arr[0];
-		for(int i=1; i<=arr.length-1; i++)
+		Queue<node_data> Queue = new LinkedList<node_data>();
+		node_data src_node = this.graph_A.getNode(src.getKey());
+		src_node.setWeight(0);
+		Queue.add(src_node);
+
+		while(!Queue.isEmpty())
 		{
-			if(arr[i]<min) {min=arr[i];}
+			src_node.setTag(1);
+			Collection<edge_data> eSrc = this.graph_A.getE(src_node.getKey());
+			for(edge_data e : eSrc)
+			{
+				node_data neibor = this.graph_A.getNode(e.getDest());
+				double neibor_Plus = src_node.getWeight()+ e.getWeight();
+				if(neibor.getWeight() > neibor_Plus)
+				{
+					neibor.setWeight(src_node.getWeight() + e.getWeight());
+					neibor.setInfo("" + src_node.getKey());
+					Queue.add(neibor);
+				}
+			}
+
+			 Queue.poll();
+			src_node = Queue.peek();
 		}
-		return min;
+
+		if (this.graph_A.getNode(dest.getKey()).getWeight()==Double.MAX_VALUE)
+			throw new RuntimeException("there is no path ");
+		else{return this.graph_A.getNode(dest.getKey()).getWeight();}
 	}
-	
-	
+
+
 	public static void main(String args[])
 	{
-		Point3D x = new Point3D(1,2,3); 
-		Point3D y = new Point3D(-1,-2,-3);
-		Point3D z = new Point3D(6,7,8);
-		Point3D w = new Point3D(6,7,8);
-		Point3D s = new Point3D(6,7,8);
+		DGraph d_g = new DGraph();
+		Graph_Algo g_a = new Graph_Algo();
+		Point3D x = new Point3D(10, 20, 3);
+		Point3D y = new Point3D(-10, -20, -3);
+		Point3D z = new Point3D(20, 40, 8);
+		Point3D w = new Point3D(-32, 30, 9);
+		Point3D s = new Point3D(40, -20, 0);
+		Point3D j = new Point3D(90, 10, -8);
 
-		node_data a = new Node(1,3,2,x,"michal");
-		node_data b = new Node(2,4,3,y,"yarden");
-		node_data c = new Node(3,5,4,z,"sf");
-		node_data d = new Node(4,5,6,s,"s");
-		node_data e = new Node(5,9,6,w,"tt");
 
-		
-		
-		DGraph d1 = new DGraph();
-		d1.addNode(a);
-		d1.addNode(b);
-		d1.addNode(c);
-		d1.addNode(d);
-		d1.addNode(e);
-		
+		node_data a_0 = new Node(0, 3, 2, x, "michal");
+		node_data b_1 = new Node(1, 4, 3, y, "yarden");
+		node_data c_2 = new Node(2, 5, 4, z, "sf");
+		node_data d_3 = new Node(3, 5, 6, s, "s");
+		node_data e_4 = new Node(4, 9, 6, w, "tt");
+		node_data f_5 = new Node(5, 9, 6, w, "tt");
 
-		d1.connect(a.getKey(),c.getKey(),1);
-		d1.connect(c.getKey(),b.getKey(),10);
-		d1.connect(b.getKey(),a.getKey(),3);
-		d1.connect(c.getKey(),b.getKey(),10);
-		d1.connect(c.getKey(),d.getKey(),5);
-		d1.connect(d.getKey(),a.getKey(),12);
-		d1.connect(e.getKey(),c.getKey(),6);
+		d_g.addNode(a_0);
+		d_g.addNode(b_1);
+		d_g.addNode(c_2);
+		d_g.addNode(d_3);
+		d_g.addNode(e_4);
+		d_g.addNode(f_5);
 
-	
-		Graph_Algo check = new Graph_Algo(d1);
-		System.out.println(check.isConnected());
+		d_g.connect(a_0.getKey(), b_1.getKey(), 10);
+		d_g.connect(a_0.getKey(), e_4.getKey(), 5);
+		d_g.connect(b_1.getKey(), e_4.getKey(), 2);
+		d_g.connect(b_1.getKey(), c_2.getKey(), 1);
+		d_g.connect(c_2.getKey(), d_3.getKey(), 4);
+		d_g.connect(d_3.getKey(), a_0.getKey(), 7);
+		d_g.connect(d_3.getKey(), c_2.getKey(), 6);
+		d_g.connect(e_4.getKey(), d_3.getKey(), 2);
+		d_g.connect(e_4.getKey(), c_2.getKey(), 9);
+		d_g.connect(f_5.getKey(), b_1.getKey(), 3);
+		d_g.connect(f_5.getKey(), c_2.getKey(), 14);
+		d_g.connect(c_2.getKey(), f_5.getKey(), 20);
 
-	
+		g_a.init(d_g); // this graph is connected
+
+	//	System.out.println(g_a.isConnected());
+		System.out.println(g_a.shortestPath(3,1));
 	}
 }

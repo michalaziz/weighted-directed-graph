@@ -73,12 +73,15 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+
+import gui.Graph_GUI;
 
 /**
  *  The {@code StdDraw} class provides a basic capability for
  *  creating drawings with your programs. It uses a simple graphics model that
- *  allows you to create drawings consisting of points, lines, squares, 
+ *  allows you to create drawings consisting of points, lines, squares,
  *  circles, and other geometric shapes in a window on your computer and
  *  to save the drawings to a file. Standard drawing also includes
  *  facilities for text, color, pictures, and animation, along with
@@ -108,7 +111,7 @@ import javax.swing.KeyStroke;
  *  If you compile and execute the program, you should see a window
  *  appear with a thick magenta line and a blue point.
  *  This program illustrates the two main types of methods in standard
- *  drawing—methods that draw geometric shapes and methods that
+ *  drawingג€”methods that draw geometric shapes and methods that
  *  control drawing parameters.
  *  The methods {@code StdDraw.line()} and {@code StdDraw.point()}
  *  draw lines and points; the methods {@code StdDraw.setPenRadius()}
@@ -247,7 +250,7 @@ import javax.swing.KeyStroke;
  *  <li> {@link #setScale(double min, double max)}
  *  </ul>
  *  <p>
- *  The arguments are the coordinates of the minimum and maximum 
+ *  The arguments are the coordinates of the minimum and maximum
  *  <em>x</em>- or <em>y</em>-coordinates that will appear in the canvas.
  *  For example, if you  wish to use the default coordinate system but
  *  leave a small margin, you can call {@code StdDraw.setScale(-.05, 1.05)}.
@@ -303,7 +306,7 @@ import javax.swing.KeyStroke;
  *  or rescale it to fit snugly inside a width-by-height bounding box.
  *  <p>
  *  <b>Saving to a file.</b>
- *  You save your image to a file using the <em>File → Save</em> menu option.
+ *  You save your image to a file using the <em>File ג†’ Save</em> menu option.
  *  You can also save a file programatically using the following method:
  *  <ul>
  *  <li> {@link #save(String filename)}
@@ -311,7 +314,7 @@ import javax.swing.KeyStroke;
  *  <p>
  *  The supported image formats are JPEG and PNG. The filename must have either the
  *  extension .jpg or .png.
- *  We recommend using PNG for drawing that consist solely of geometric shapes and JPEG 
+ *  We recommend using PNG for drawing that consist solely of geometric shapes and JPEG
  *  for drawings that contains pictures.
  *  <p>
  *  <b>Clearing the canvas.</b>
@@ -339,14 +342,14 @@ import javax.swing.KeyStroke;
  *  <p>
  *  By default, double buffering is disabled, which means that as soon as you
  *  call a drawing
- *  method—such as {@code point()} or {@code line()}—the
+ *  methodג€”such as {@code point()} or {@code line()}ג€”the
  *  results appear on the screen.
  *  <p>
  *  When double buffering is enabled by calling {@link #enableDoubleBuffering()},
  *  all drawing takes place on the <em>offscreen canvas</em>. The offscreen canvas
  *  is not displayed. Only when you call
  *  {@link #show()} does your drawing get copied from the offscreen canvas to
- *  the onscreen canvas, where it is displayed in the standard drawing window. You 
+ *  the onscreen canvas, where it is displayed in the standard drawing window. You
  *  can think of double buffering as collecting all of the lines, points, shapes,
  *  and text that you tell it to draw, and then drawing them all
  *  <em>simultaneously</em>, upon request.
@@ -429,7 +432,7 @@ import javax.swing.KeyStroke;
  *  <li> Any method that is passed a {@code null} argument will throw an
  *       {@link IllegalArgumentException}.
  *  <li> Except as noted in the APIs, drawing an object outside (or partly outside)
- *       the canvas is permitted—however, only the part of the object that
+ *       the canvas is permittedג€”however, only the part of the object that
  *       appears inside the canvas will be visible.
  *  <li> Except as noted in the APIs, all methods accept {@link Double#NaN},
  *       {@link Double#POSITIVE_INFINITY}, and {@link Double#NEGATIVE_INFINITY}
@@ -437,7 +440,7 @@ import javax.swing.KeyStroke;
  *       that is NaN will behave as if it is outside the canvas, and will not be visible.
  *  <li> Due to floating-point issues, an object drawn with an <em>x</em>- or
  *       <em>y</em>-coordinate that is way outside the canvas (such as the line segment
- *       from (0.5, –&infin;) to (0.5, &infin;) may not be visible even in the
+ *       from (0.5, ג€“&infin;) to (0.5, &infin;) may not be visible even in the
  *       part of the canvas where it should be.
  *  </ul>
  *  <p>
@@ -480,6 +483,8 @@ import javax.swing.KeyStroke;
  */
 public final class StdDraw implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
 
+	private static Graph_GUI gGui;
+	public static void set_gGui(Graph_GUI g) { gGui=g; }
 	/**
 	 *  The color black.
 	 */
@@ -591,7 +596,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	private static boolean defer = false;
 
 	// boundary of drawing canvas, 0% border
-	// private static final double BORDER = 0.05;
+// private static final double BORDER = 0.05;
 	private static final double BORDER = 0.00;
 	private static final double DEFAULT_XMIN = 0.0;
 	private static final double DEFAULT_XMAX = 1.0;
@@ -615,7 +620,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 	// singleton for callbacks: avoids generation of extra .class files
 	private static StdDraw std = new StdDraw();
-
 	// the frame for drawing to the screen
 	private static JFrame frame;
 
@@ -687,13 +691,13 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		setFont();
 		clear();
 
-		// add antialiasing
+// add antialiasing
 		RenderingHints hints = new RenderingHints(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
 		hints.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 		offscreen.addRenderingHints(hints);
 
-		// frame stuff
+// frame stuff
 		ImageIcon icon = new ImageIcon(onscreenImage);
 		JLabel draw = new JLabel(icon);
 
@@ -704,7 +708,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		frame.addKeyListener(std);    // JLabel cannot get keyboard focus
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);            // closes all windows
-		// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
+// frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);      // closes only current window
 		frame.setTitle("Standard Draw");
 		frame.setJMenuBar(createMenuBar());
 		frame.pack();
@@ -713,22 +717,55 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 	// create the menu bar (changed to private)
-	private static JMenuBar createMenuBar() {
+	private static  JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("File");
-		menuBar.add(menu);
-		JMenuItem menuItem1 = new JMenuItem(" Save...   ");
-		menuItem1.addActionListener(std);
-		menuItem1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		menu.add(menuItem1);
+
+//file
+		JMenu menuFile = new JMenu("File");
+		menuBar.add(menuFile);
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem load = new JMenuItem("Load");
+		menuFile.add(save );
+		menuFile.add(load);
+		save .addActionListener(std);
+		load.addActionListener(std);
+
+//node
+		JMenu menuNode = new JMenu("Node");
+		menuBar.add(menuNode);
+		JMenuItem add = new JMenuItem("Add Node");
+		JMenuItem removeNode = new JMenuItem("Remove Node");
+		menuNode.add(add);
+		menuNode.add(removeNode);
+
+//edge
+		JMenu menuEdge = new JMenu("Edge");
+		menuBar.add(menuEdge);
+		JMenuItem connect = new JMenuItem("Connect");
+		JMenuItem removeEdge= new JMenuItem("Remove Edge");
+		menuEdge.add(connect);
+		menuEdge.add(removeEdge);
+
+//algorithems
+		JMenu menuAlgo = new JMenu("Algorithems");
+		menuBar.add(menuAlgo);
+		JMenuItem isConnected = new JMenuItem("Is Connected");
+		JMenuItem shortestPathDist = new JMenuItem("shortest Path Dist");
+		JMenuItem shortestPath = new JMenuItem("shortest Path");
+		JMenuItem TSP = new JMenuItem("TSP");
+		menuAlgo.add(isConnected);
+		menuAlgo.add(shortestPathDist);
+		menuAlgo.add(shortestPath);
+		menuAlgo.add(TSP);
+
+
 		return menuBar;
 	}
 
 
-	/***************************************************************************
-	 *  User and screen coordinate systems.
-	 ***************************************************************************/
+/***************************************************************************
+ *  User and screen coordinate systems.
+ ***************************************************************************/
 
 	/**
 	 * Sets the <em>x</em>-scale to be the default (between 0.0 and 1.0).
@@ -864,7 +901,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		penRadius = radius;
 		float scaledPenRadius = (float) (radius * DEFAULT_SIZE);
 		BasicStroke stroke = new BasicStroke(scaledPenRadius, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-		// BasicStroke stroke = new BasicStroke(scaledPenRadius);
+// BasicStroke stroke = new BasicStroke(scaledPenRadius);
 		offscreen.setStroke(stroke);
 	}
 
@@ -945,9 +982,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 
-	/***************************************************************************
-	 *  Drawing geometric shapes.
-	 ***************************************************************************/
+/***************************************************************************
+ *  Drawing geometric shapes.
+ ***************************************************************************/
 
 	/**
 	 * Draws a line segment between (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>) and
@@ -989,9 +1026,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		double r = penRadius;
 		float scaledPenRadius = (float) (r * DEFAULT_SIZE);
 
-		// double ws = factorX(2*r);
-		// double hs = factorY(2*r);
-		// if (ws <= 1 && hs <= 1) pixel(x, y);
+// double ws = factorX(2*r);
+// double hs = factorY(2*r);
+// if (ws <= 1 && hs <= 1) pixel(x, y);
 		if (scaledPenRadius <= 1) pixel(x, y);
 		else offscreen.fill(new Ellipse2D.Double(xs - scaledPenRadius/2, ys - scaledPenRadius/2,
 				scaledPenRadius, scaledPenRadius));
@@ -1191,10 +1228,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 
 	/**
-	 * Draws a polygon with the vertices 
+	 * Draws a polygon with the vertices
 	 * (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>),
 	 * (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), ...,
-	 * (<em>x</em><sub><em>n</em>–1</sub>, <em>y</em><sub><em>n</em>–1</sub>).
+	 * (<em>x</em><sub><em>n</em>ג€“1</sub>, <em>y</em><sub><em>n</em>ג€“1</sub>).
 	 *
 	 * @param  x an array of all the <em>x</em>-coordinates of the polygon
 	 * @param  y an array of all the <em>y</em>-coordinates of the polygon
@@ -1220,10 +1257,10 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 	/**
-	 * Draws a polygon with the vertices 
+	 * Draws a polygon with the vertices
 	 * (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>),
 	 * (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), ...,
-	 * (<em>x</em><sub><em>n</em>–1</sub>, <em>y</em><sub><em>n</em>–1</sub>).
+	 * (<em>x</em><sub><em>n</em>ג€“1</sub>, <em>y</em><sub><em>n</em>ג€“1</sub>).
 	 *
 	 * @param  x an array of all the <em>x</em>-coordinates of the polygon
 	 * @param  y an array of all the <em>y</em>-coordinates of the polygon
@@ -1252,14 +1289,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	/***************************************************************************
 	 *  Drawing images.
 	 ***************************************************************************/
-	// get an image from the given filename
+// get an image from the given filename
 	private static Image getImage(String filename) {
 		if (filename == null) throw new IllegalArgumentException();
 
-		// to read from file
+// to read from file
 		ImageIcon icon = new ImageIcon(filename);
 
-		// try to read from URL
+// try to read from URL
 		if ((icon == null) || (icon.getImageLoadStatus() != MediaTracker.COMPLETE)) {
 			try {
 				URL url = new URL(filename);
@@ -1270,14 +1307,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			}
 		}
 
-		// in case file is inside a .jar (classpath relative to StdDraw)
+// in case file is inside a .jar (classpath relative to StdDraw)
 		if ((icon == null) || (icon.getImageLoadStatus() != MediaTracker.COMPLETE)) {
 			URL url = StdDraw.class.getResource(filename);
 			if (url != null)
 				icon = new ImageIcon(url);
 		}
 
-		// in case file is inside a .jar (classpath relative to root of jar)
+// in case file is inside a .jar (classpath relative to root of jar)
 		if ((icon == null) || (icon.getImageLoadStatus() != MediaTracker.COMPLETE)) {
 			URL url = StdDraw.class.getResource("/" + filename);
 			if (url == null) throw new IllegalArgumentException("image " + filename + " not found");
@@ -1287,14 +1324,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		return icon.getImage();
 	}
 
-	/***************************************************************************
-	 * [Summer 2016] Should we update to use ImageIO instead of ImageIcon()?
-	 *               Seems to have some issues loading images on some systems
-	 *               and slows things down on other systems.
-	 *               especially if you don't call ImageIO.setUseCache(false)
-	 *               One advantage is that it returns a BufferedImage.
-	 ***************************************************************************/
-	/*
+/***************************************************************************
+ * [Summer 2016] Should we update to use ImageIO instead of ImageIcon()?
+ *               Seems to have some issues loading images on some systems
+ *               and slows things down on other systems.
+ *               especially if you don't call ImageIO.setUseCache(false)
+ *               One advantage is that it returns a BufferedImage.
+ ***************************************************************************/
+/*
     private static BufferedImage getImage(String filename) {
         if (filename == null) throw new IllegalArgumentException();
 
@@ -1303,7 +1340,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             URL url = new URL(filename);
             BufferedImage image = ImageIO.read(url);
             return image;
-        } 
+        }
         catch (IOException e) {
             // ignore
         }
@@ -1313,7 +1350,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             URL url = StdDraw.class.getResource(filename);
             BufferedImage image = ImageIO.read(url);
             return image;
-        } 
+        }
         catch (IOException e) {
             // ignore
         }
@@ -1323,13 +1360,13 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
             URL url = StdDraw.class.getResource("/" + filename);
             BufferedImage image = ImageIO.read(url);
             return image;
-        } 
+        }
         catch (IOException e) {
             // ignore
         }
         throw new IllegalArgumentException("image " + filename + " not found");
     }
-	 */
+*/
 	/**
 	 * Draws the specified image centered at (<em>x</em>, <em>y</em>).
 	 * The supported image formats are JPEG, PNG, and GIF.
@@ -1344,12 +1381,12 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 * @throws IllegalArgumentException if the image filename is invalid
 	 */
 	public static void picture(double x, double y, String filename) {
-		// BufferedImage image = getImage(filename);
+// BufferedImage image = getImage(filename);
 		Image image = getImage(filename);
 		double xs = scaleX(x);
 		double ys = scaleY(y);
-		// int ws = image.getWidth();    // can call only if image is a BufferedImage
-		// int hs = image.getHeight();
+// int ws = image.getWidth();    // can call only if image is a BufferedImage
+// int hs = image.getHeight();
 		int ws = image.getWidth(null);
 		int hs = image.getHeight(null);
 		if (ws < 0 || hs < 0) throw new IllegalArgumentException("image " + filename + " is corrupt");
@@ -1370,12 +1407,12 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 * @throws IllegalArgumentException if the image filename is invalid
 	 */
 	public static void picture(double x, double y, String filename, double degrees) {
-		// BufferedImage image = getImage(filename);
+// BufferedImage image = getImage(filename);
 		Image image = getImage(filename);
 		double xs = scaleX(x);
 		double ys = scaleY(y);
-		// int ws = image.getWidth();    // can call only if image is a BufferedImage
-		// int hs = image.getHeight();
+// int ws = image.getWidth();    // can call only if image is a BufferedImage
+// int hs = image.getHeight();
 		int ws = image.getWidth(null);
 		int hs = image.getHeight(null);
 		if (ws < 0 || hs < 0) throw new IllegalArgumentException("image " + filename + " is corrupt");
@@ -1457,9 +1494,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		draw();
 	}
 
-	/***************************************************************************
-	 *  Drawing text.
-	 ***************************************************************************/
+/***************************************************************************
+ *  Drawing text.
+ ***************************************************************************/
 
 	/**
 	 * Write the given text string in the current font, centered at (<em>x</em>, <em>y</em>).
@@ -1577,7 +1614,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 	/**
-	 * Enable double buffering. All subsequent calls to 
+	 * Enable double buffering. All subsequent calls to
 	 * drawing methods such as {@code line()}, {@code circle()},
 	 * and {@code square()} will be deffered until the next call
 	 * to show(). Useful for animations.
@@ -1587,7 +1624,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 	/**
-	 * Disable double buffering. All subsequent calls to 
+	 * Disable double buffering. All subsequent calls to
 	 * drawing methods such as {@code line()}, {@code circle()},
 	 * and {@code square()} will be displayed on screen when called.
 	 * This is the default.
@@ -1597,9 +1634,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 
-	/***************************************************************************
-	 *  Save drawing to a file.
-	 ***************************************************************************/
+/***************************************************************************
+ *  Save drawing to a file.
+ ***************************************************************************/
 
 	/**
 	 * Saves the drawing to using the specified filename.
@@ -1613,7 +1650,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		File file = new File(filename);
 		String suffix = filename.substring(filename.lastIndexOf('.') + 1);
 
-		// png files
+// png files
 		if ("png".equalsIgnoreCase(suffix)) {
 			try {
 				ImageIO.write(onscreenImage, suffix, file);
@@ -1623,8 +1660,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			}
 		}
 
-		// need to change from ARGB to RGB for JPEG
-		// reference: http://archives.java.sun.com/cgi-bin/wa?A2=ind0404&L=java2d-interest&D=0&P=2727
+// need to change from ARGB to RGB for JPEG
+// reference: http://archives.java.sun.com/cgi-bin/wa?A2=ind0404&L=java2d-interest&D=0&P=2727
 		else if ("jpg".equalsIgnoreCase(suffix)) {
 			WritableRaster raster = onscreenImage.getRaster();
 			WritableRaster newRaster;
@@ -1654,18 +1691,32 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
-		chooser.setVisible(true);
-		String filename = chooser.getFile();
-		if (filename != null) {
-			StdDraw.save(chooser.getDirectory() + File.separator + chooser.getFile());
+		switch(e.getActionCommand())
+		{
+			case "Save":
+				String fileName =JOptionPane.showInputDialog(null, "File Name:");
+				if(fileName != null) {
+					fileName=fileName +".txt";
+					gGui.get_gAlgo().save(fileName);
+				}
+				break;
+
+
+			case "Load":
+				String fileName2 =JOptionPane.showInputDialog(null, "File Name:");
+				if(fileName2 != null) {
+					fileName="Load graph/"+fileName2 +".txt";
+					gGui.get_gAlgo().init(fileName2);
+				}
+				break;
 		}
+
 	}
 
 
-	/***************************************************************************
-	 *  Mouse interactions.
-	 ***************************************************************************/
+/***************************************************************************
+ *  Mouse interactions.
+ ***************************************************************************/
 
 	/**
 	 * Returns true if the mouse is being pressed.
@@ -1719,7 +1770,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// this body is intentionally left empty
+// this body is intentionally left empty
 	}
 
 	/**
@@ -1727,7 +1778,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// this body is intentionally left empty
+// this body is intentionally left empty
 	}
 
 	/**
@@ -1735,7 +1786,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// this body is intentionally left empty
+// this body is intentionally left empty
 	}
 
 	/**
@@ -1783,9 +1834,9 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 
-	/***************************************************************************
-	 *  Keyboard interactions.
-	 ***************************************************************************/
+/***************************************************************************
+ *  Keyboard interactions.
+ ***************************************************************************/
 
 	/**
 	 * Returns true if the user has typed a key (that has not yet been processed).
@@ -1817,7 +1868,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				throw new NoSuchElementException("your program has already processed all keystrokes");
 			}
 			return keysTyped.remove(keysTyped.size() - 1);
-			// return keysTyped.removeLast();
+// return keysTyped.removeLast();
 		}
 	}
 
@@ -1887,14 +1938,14 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		StdDraw.setPenRadius(0.02);
 		StdDraw.arc(0.8, 0.2, 0.1, 200, 45);
 
-		// draw a blue diamond
+// draw a blue diamond
 		StdDraw.setPenRadius();
 		StdDraw.setPenColor(StdDraw.BOOK_BLUE);
 		double[] x = { 0.1, 0.2, 0.3, 0.2 };
 		double[] y = { 0.2, 0.3, 0.2, 0.1 };
 		StdDraw.filledPolygon(x, y);
 
-		// text
+// text
 		StdDraw.setPenColor(StdDraw.BLACK);
 		StdDraw.text(0.2, 0.5, "black text");
 		StdDraw.setPenColor(StdDraw.WHITE);
@@ -1902,7 +1953,3 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 }
-
-
-//Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne. 
-//Last updated: Mon Aug 27 16:43:47 EDT 2018.
