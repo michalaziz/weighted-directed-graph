@@ -23,8 +23,10 @@ public class DGraph implements graph{
 		this.edgeSize=0;
 		this.nodeSize=0;	
 	}
+
 	/**
-	 * return the node by its id
+	 * @param key - the node_id
+	 * @return the node by its id
 	 */
 	@Override
 	public node_data getNode(int key) {
@@ -36,24 +38,29 @@ public class DGraph implements graph{
 		else {return this.hmN.get(key);}
 	}
 
+
 	/**
-	 * return the edge by the source and destination vertex key
+	 * @param src is the key source's node
+	 * @param dest is the ket dest's node
+	 * @return the edge by the source and destination vertex key
 	 */
 	@Override
 	public edge_data getEdge(int src, int dest) {
-		//why try and catch?
+
 		try
 		{
 			return this.hmE.get(src).get(dest);
 		}
-		catch(Exception e)
+		catch(Exception e) // if dest or src does not exist
 		{
 			return null ;
 		}
 	}
 
+
 	/**
 	 * add a new node to the graph with the given node_data n.
+	 * @param n
 	 */
 	@Override
 	public void addNode(node_data n) {
@@ -61,10 +68,13 @@ public class DGraph implements graph{
 		this.MC++;
 		this.nodeSize++;
 	}
-	/**
-	 * Create a new edge that start at node src and end at node dest
-	 */
 
+	/**
+	 * This functuon connect an edge with weight w between node src to node dest.
+	 * @param src - the source of the edge.
+	 * @param dest - the destination of the edge.
+	 * @param w - positive weight representing the cost between src-->dest.
+	 */
 	@Override
 	public void connect(int src, int dest, double w) {
 		edge_data e= new Edge(src,dest,w);
@@ -85,11 +95,18 @@ public class DGraph implements graph{
 		MC++;
 	}
 
+	/**
+	 * @return all vertex in this graph.
+	 */
 	@Override
 	public Collection<node_data> getV() {
 		return this.hmN.values();
 	}
 
+	/**
+	 * @param node_id is the key's node
+	 * @return a collection representing all the edges getting out of a given node by ist id.
+	 */
 	@Override
 	public Collection<edge_data> getE(int node_id) {
 		try {
@@ -99,8 +116,12 @@ public class DGraph implements graph{
 		}
 		
 	}
+
 	/**
-	 * remove the node with the key the we'v got and all the edges that connect to this key 
+	 * This function delete a node from the graph by ist key and delete all edges which starts
+	 * or ends at this node.
+	 * @param key is the key we wont to delete.
+	 * @return
 	 */
 	@Override
 	public node_data removeNode(int key) {
@@ -121,7 +142,12 @@ public class DGraph implements graph{
 	/**
 	 * remove the edge the starts at node src and ends at node dest 
 	 */
-
+	/**
+	 * This function delete the edge from the graph by src and dest keys.
+	 * @param src
+	 * @param dest
+	 * @return the deleted edge.
+	 */
 	@Override
 	public edge_data removeEdge(int src, int dest) {
 		if(getNode(src)==null)
@@ -135,16 +161,25 @@ public class DGraph implements graph{
 
 	}
 
+	/**
+	 * @return the number of vertices in the graph.
+	 */
 	@Override
 	public int nodeSize() {
 		return this.nodeSize;
 	}
 
+	/**
+	 * @return the number of edges that in the graph.
+	 */
 	@Override
 	public int edgeSize() {
 		return this.edgeSize;
 	}
 
+	/**
+	 * @return the number of changes that has been done in the graph.
+	 */
 	@Override
 	public int getMC() {
 		return this.MC;
