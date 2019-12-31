@@ -7,6 +7,9 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -22,72 +25,41 @@ import dataStructure.graph;
 import utils.Point3D;
 import utils.StdDraw;
 
-public class Graph_GUI extends JFrame implements ActionListener {
-	graph graph_gui =new DGraph();
-	LinkedList<Point3D> points = new LinkedList<Point3D>();
+public class Graph_GUI extends JFrame implements ActionListener, MouseListener,Serializable {
+	private graph graph_gui ;
+	private Graph_Algo gAlgo;
+	//LinkedList<Point3D> points = new LinkedList<Point3D>();
 
-	Graph_GUI(graph g)
+	public Graph_Algo get_gAlgo()
+	{
+		return gAlgo;
+	}
+	public graph get_graph_gui()
+	{
+		return graph_gui;
+	}
+	public Graph_GUI(graph g)
 	{
 		this.graph_gui=g;
 		this.initGUI();
 
 	}
 
-	Graph_GUI()
+	public Graph_GUI()
 	{
 		initGUI();
 	}
 
 	private void initGUI() 
-	{
-		StdDraw.setCanvasSize(400,400);
+	{	
+/*****************************/
+	//draw the graph//
 		this.drawPoints();
 		this.drawEdges();
 	}
 
-	public void paint(Graphics g)
-	{
-		super.paint(g);
 
-		Point3D prev = null;
 
-		for (Point3D p : points) 
-		{
-			g.setColor(Color.BLUE);
-			g.fillOval((int)p.x(), (int)p.y(), 10, 10);
-
-			if(prev != null)
-			{
-				g.setColor(Color.RED);
-				g.drawLine((int)p.x(), (int)p.y(), 
-						(int)prev.x(), (int)prev.y());
-
-				g.drawString("5", (int)((p.x()+prev.x())/2),(int)((p.y()+prev.y())/2));
-			}
-
-			prev = p;
-		}
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) 
-	{
-		String str = e.getActionCommand();
-
-		if(str.equals("Item 1"))
-		{
-			Point3D p1 = new Point3D(100,100);
-			Point3D p2 = new Point3D(50,300);
-			Point3D p3 = new Point3D(400,150);
-
-			points.add(p1);
-			points.add(p2);
-			points.add(p3);
-
-			repaint();
-		}
-
-	}
 	public void drawPoints()
 	{
 
@@ -164,7 +136,7 @@ public class Graph_GUI extends JFrame implements ActionListener {
 		d.addNode(b);
 		d.addNode(c);
 		d.addNode(e);
-//		d.addNode(f);
+		//		d.addNode(f);
 		d.connect(a.getKey(),b.getKey(),1);
 		d.connect(b.getKey(),c.getKey(),2);
 		d.connect(c.getKey(),a.getKey(),3);
@@ -175,4 +147,41 @@ public class Graph_GUI extends JFrame implements ActionListener {
 
 	}
 
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
+

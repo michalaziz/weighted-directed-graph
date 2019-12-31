@@ -73,7 +73,10 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+
+import gui.Graph_GUI;
 
 /**
  *  The {@code StdDraw} class provides a basic capability for
@@ -480,6 +483,8 @@ import javax.swing.KeyStroke;
  */
 public final class StdDraw implements ActionListener, MouseListener, MouseMotionListener, KeyListener {
 
+	private static Graph_GUI gGui;
+	public static void set_gGui(Graph_GUI g) { gGui=g; }
 	/**
 	 *  The color black.
 	 */
@@ -615,7 +620,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 	// singleton for callbacks: avoids generation of extra .class files
 	private static StdDraw std = new StdDraw();
-
 	// the frame for drawing to the screen
 	private static JFrame frame;
 
@@ -713,15 +717,48 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	}
 
 	// create the menu bar (changed to private)
-	private static JMenuBar createMenuBar() {
+	private static  JMenuBar createMenuBar() {
 		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("File");
-		menuBar.add(menu);
-		JMenuItem menuItem1 = new JMenuItem(" Save...   ");
-		menuItem1.addActionListener(std);
-		menuItem1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,
-				Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
-		menu.add(menuItem1);
+
+		//file
+		JMenu menuFile = new JMenu("File");
+		menuBar.add(menuFile);
+		JMenuItem save = new JMenuItem("Save");
+		JMenuItem load = new JMenuItem("Load");
+		menuFile.add(save );
+		menuFile.add(load);
+		save .addActionListener(std);
+		load.addActionListener(std);
+
+		//node
+		JMenu menuNode = new JMenu("Node");
+		menuBar.add(menuNode);
+		JMenuItem add = new JMenuItem("Add Node");
+		JMenuItem removeNode = new JMenuItem("Remove Node");
+		menuNode.add(add);
+		menuNode.add(removeNode);
+
+		//edge
+		JMenu menuEdge = new JMenu("Edge");
+		menuBar.add(menuEdge);
+		JMenuItem connect = new JMenuItem("Connect");
+		JMenuItem removeEdge= new JMenuItem("Remove Edge");
+		menuEdge.add(connect);
+		menuEdge.add(removeEdge);
+
+		//algorithems
+		JMenu menuAlgo = new JMenu("Algorithems");
+		menuBar.add(menuAlgo);
+		JMenuItem isConnected = new JMenuItem("Is Connected");
+		JMenuItem shortestPathDist = new JMenuItem("shortest Path Dist");
+		JMenuItem shortestPath = new JMenuItem("shortest Path");
+		JMenuItem TSP = new JMenuItem("TSP");
+		menuAlgo.add(isConnected);
+		menuAlgo.add(shortestPathDist);
+		menuAlgo.add(shortestPath);
+		menuAlgo.add(TSP);
+
+
 		return menuBar;
 	}
 
@@ -1654,255 +1691,269 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		FileDialog chooser = new FileDialog(StdDraw.frame, "Use a .png or .jpg extension", FileDialog.SAVE);
-		chooser.setVisible(true);
-		String filename = chooser.getFile();
-		if (filename != null) {
-			StdDraw.save(chooser.getDirectory() + File.separator + chooser.getFile());
-		}
-	}
-
-
-	/***************************************************************************
-	 *  Mouse interactions.
-	 ***************************************************************************/
-
-	/**
-	 * Returns true if the mouse is being pressed.
-	 *
-	 * @return {@code true} if the mouse is being pressed; {@code false} otherwise
-	 */
-	public static boolean isMousePressed() {
-		synchronized (mouseLock) {
-			return isMousePressed;
-		}
-	}
-
-	/**
-	 * Returns true if the mouse is being pressed.
-	 *
-	 * @return {@code true} if the mouse is being pressed; {@code false} otherwise
-	 * @deprecated replaced by {@link #isMousePressed()}
-	 */
-	@Deprecated
-	public static boolean mousePressed() {
-		synchronized (mouseLock) {
-			return isMousePressed;
-		}
-	}
-
-	/**
-	 * Returns the <em>x</em>-coordinate of the mouse.
-	 *
-	 * @return the <em>x</em>-coordinate of the mouse
-	 */
-	public static double mouseX() {
-		synchronized (mouseLock) {
-			return mouseX;
-		}
-	}
-
-	/**
-	 * Returns the <em>y</em>-coordinate of the mouse.
-	 *
-	 * @return <em>y</em>-coordinate of the mouse
-	 */
-	public static double mouseY() {
-		synchronized (mouseLock) {
-			return mouseY;
-		}
-	}
-
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// this body is intentionally left empty
-	}
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// this body is intentionally left empty
-	}
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// this body is intentionally left empty
-	}
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mousePressed(MouseEvent e) {
-		synchronized (mouseLock) {
-			mouseX = StdDraw.userX(e.getX());
-			mouseY = StdDraw.userY(e.getY());
-			isMousePressed = true;
-		}
-	}
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		synchronized (mouseLock) {
-			isMousePressed = false;
-		}
-	}
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mouseDragged(MouseEvent e)  {
-		synchronized (mouseLock) {
-			mouseX = StdDraw.userX(e.getX());
-			mouseY = StdDraw.userY(e.getY());
-		}
-	}
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		synchronized (mouseLock) {
-			mouseX = StdDraw.userX(e.getX());
-			mouseY = StdDraw.userY(e.getY());
-		}
-	}
-
-
-	/***************************************************************************
-	 *  Keyboard interactions.
-	 ***************************************************************************/
-
-	/**
-	 * Returns true if the user has typed a key (that has not yet been processed).
-	 *
-	 * @return {@code true} if the user has typed a key (that has not yet been processed
-	 *         by {@link #nextKeyTyped()}; {@code false} otherwise
-	 */
-	public static boolean hasNextKeyTyped() {
-		synchronized (keyLock) {
-			return !keysTyped.isEmpty();
-		}
-	}
-
-	/**
-	 * Returns the next key that was typed by the user (that your program has not already processed).
-	 * This method should be preceded by a call to {@link #hasNextKeyTyped()} to ensure
-	 * that there is a next key to process.
-	 * This method returns a Unicode character corresponding to the key
-	 * typed (such as {@code 'a'} or {@code 'A'}).
-	 * It cannot identify action keys (such as F1 and arrow keys)
-	 * or modifier keys (such as control).
-	 *
-	 * @return the next key typed by the user (that your program has not already processed).
-	 * @throws NoSuchElementException if there is no remaining key
-	 */
-	public static char nextKeyTyped() {
-		synchronized (keyLock) {
-			if (keysTyped.isEmpty()) {
-				throw new NoSuchElementException("your program has already processed all keystrokes");
+		switch(e.getActionCommand())
+		{
+		case "Save":
+			String fileName =JOptionPane.showInputDialog(null, "File Name:");
+			if(fileName != null) {
+				fileName=fileName +".txt";
+				gGui.get_gAlgo().save(fileName);
 			}
-			return keysTyped.remove(keysTyped.size() - 1);
-			// return keysTyped.removeLast();
+			break;
+		
+
+		case "Load":
+			String fileName2 =JOptionPane.showInputDialog(null, "File Name:");
+			if(fileName2 != null) {
+				fileName="Load graph/"+fileName2 +".txt";
+				gGui.get_gAlgo().init(fileName2);
+			}
+			break;
 		}
+		
 	}
 
-	/**
-	 * Returns true if the given key is being pressed.
-	 * <p>
-	 * This method takes the keycode (corresponding to a physical key)
-	 *  as an argument. It can handle action keys
-	 * (such as F1 and arrow keys) and modifier keys (such as shift and control).
-	 * See {@link KeyEvent} for a description of key codes.
-	 *
-	 * @param  keycode the key to check if it is being pressed
-	 * @return {@code true} if {@code keycode} is currently being pressed;
-	 *         {@code false} otherwise
-	 */
-	public static boolean isKeyPressed(int keycode) {
-		synchronized (keyLock) {
-			return keysDown.contains(keycode);
+
+		/***************************************************************************
+		 *  Mouse interactions.
+		 ***************************************************************************/
+
+		/**
+		 * Returns true if the mouse is being pressed.
+		 *
+		 * @return {@code true} if the mouse is being pressed; {@code false} otherwise
+		 */
+		public static boolean isMousePressed() {
+			synchronized (mouseLock) {
+				return isMousePressed;
+			}
 		}
-	}
 
-
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void keyTyped(KeyEvent e) {
-		synchronized (keyLock) {
-			keysTyped.addFirst(e.getKeyChar());
+		/**
+		 * Returns true if the mouse is being pressed.
+		 *
+		 * @return {@code true} if the mouse is being pressed; {@code false} otherwise
+		 * @deprecated replaced by {@link #isMousePressed()}
+		 */
+		@Deprecated
+		public static boolean mousePressed() {
+			synchronized (mouseLock) {
+				return isMousePressed;
+			}
 		}
-	}
 
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void keyPressed(KeyEvent e) {
-		synchronized (keyLock) {
-			keysDown.add(e.getKeyCode());
+		/**
+		 * Returns the <em>x</em>-coordinate of the mouse.
+		 *
+		 * @return the <em>x</em>-coordinate of the mouse
+		 */
+		public static double mouseX() {
+			synchronized (mouseLock) {
+				return mouseX;
+			}
 		}
-	}
 
-	/**
-	 * This method cannot be called directly.
-	 */
-	@Override
-	public void keyReleased(KeyEvent e) {
-		synchronized (keyLock) {
-			keysDown.remove(e.getKeyCode());
+		/**
+		 * Returns the <em>y</em>-coordinate of the mouse.
+		 *
+		 * @return <em>y</em>-coordinate of the mouse
+		 */
+		public static double mouseY() {
+			synchronized (mouseLock) {
+				return mouseY;
+			}
 		}
+
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// this body is intentionally left empty
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// this body is intentionally left empty
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// this body is intentionally left empty
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mousePressed(MouseEvent e) {
+			synchronized (mouseLock) {
+				mouseX = StdDraw.userX(e.getX());
+				mouseY = StdDraw.userY(e.getY());
+				isMousePressed = true;
+			}
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			synchronized (mouseLock) {
+				isMousePressed = false;
+			}
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mouseDragged(MouseEvent e)  {
+			synchronized (mouseLock) {
+				mouseX = StdDraw.userX(e.getX());
+				mouseY = StdDraw.userY(e.getY());
+			}
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			synchronized (mouseLock) {
+				mouseX = StdDraw.userX(e.getX());
+				mouseY = StdDraw.userY(e.getY());
+			}
+		}
+
+
+		/***************************************************************************
+		 *  Keyboard interactions.
+		 ***************************************************************************/
+
+		/**
+		 * Returns true if the user has typed a key (that has not yet been processed).
+		 *
+		 * @return {@code true} if the user has typed a key (that has not yet been processed
+		 *         by {@link #nextKeyTyped()}; {@code false} otherwise
+		 */
+		public static boolean hasNextKeyTyped() {
+			synchronized (keyLock) {
+				return !keysTyped.isEmpty();
+			}
+		}
+
+		/**
+		 * Returns the next key that was typed by the user (that your program has not already processed).
+		 * This method should be preceded by a call to {@link #hasNextKeyTyped()} to ensure
+		 * that there is a next key to process.
+		 * This method returns a Unicode character corresponding to the key
+		 * typed (such as {@code 'a'} or {@code 'A'}).
+		 * It cannot identify action keys (such as F1 and arrow keys)
+		 * or modifier keys (such as control).
+		 *
+		 * @return the next key typed by the user (that your program has not already processed).
+		 * @throws NoSuchElementException if there is no remaining key
+		 */
+		public static char nextKeyTyped() {
+			synchronized (keyLock) {
+				if (keysTyped.isEmpty()) {
+					throw new NoSuchElementException("your program has already processed all keystrokes");
+				}
+				return keysTyped.remove(keysTyped.size() - 1);
+				// return keysTyped.removeLast();
+			}
+		}
+
+		/**
+		 * Returns true if the given key is being pressed.
+		 * <p>
+		 * This method takes the keycode (corresponding to a physical key)
+		 *  as an argument. It can handle action keys
+		 * (such as F1 and arrow keys) and modifier keys (such as shift and control).
+		 * See {@link KeyEvent} for a description of key codes.
+		 *
+		 * @param  keycode the key to check if it is being pressed
+		 * @return {@code true} if {@code keycode} is currently being pressed;
+		 *         {@code false} otherwise
+		 */
+		public static boolean isKeyPressed(int keycode) {
+			synchronized (keyLock) {
+				return keysDown.contains(keycode);
+			}
+		}
+
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void keyTyped(KeyEvent e) {
+			synchronized (keyLock) {
+				keysTyped.addFirst(e.getKeyChar());
+			}
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void keyPressed(KeyEvent e) {
+			synchronized (keyLock) {
+				keysDown.add(e.getKeyCode());
+			}
+		}
+
+		/**
+		 * This method cannot be called directly.
+		 */
+		@Override
+		public void keyReleased(KeyEvent e) {
+			synchronized (keyLock) {
+				keysDown.remove(e.getKeyCode());
+			}
+		}
+
+
+
+
+		/**
+		 * Test client.
+		 *
+		 * @param args the command-line arguments
+		 */
+		public static void main(String[] args) {
+			StdDraw.square(0.2, 0.8, 0.1);
+			StdDraw.filledSquare(0.8, 0.8, 0.2);
+			StdDraw.circle(0.8, 0.2, 0.2);
+
+			StdDraw.setPenColor(StdDraw.BOOK_RED);
+			StdDraw.setPenRadius(0.02);
+			StdDraw.arc(0.8, 0.2, 0.1, 200, 45);
+
+			// draw a blue diamond
+			StdDraw.setPenRadius();
+			StdDraw.setPenColor(StdDraw.BOOK_BLUE);
+			double[] x = { 0.1, 0.2, 0.3, 0.2 };
+			double[] y = { 0.2, 0.3, 0.2, 0.1 };
+			StdDraw.filledPolygon(x, y);
+
+			// text
+			StdDraw.setPenColor(StdDraw.BLACK);
+			StdDraw.text(0.2, 0.5, "black text");
+			StdDraw.setPenColor(StdDraw.WHITE);
+			StdDraw.text(0.8, 0.8, "white text");
+		}
+
 	}
 
 
-
-
-	/**
-	 * Test client.
-	 *
-	 * @param args the command-line arguments
-	 */
-	public static void main(String[] args) {
-		StdDraw.square(0.2, 0.8, 0.1);
-		StdDraw.filledSquare(0.8, 0.8, 0.2);
-		StdDraw.circle(0.8, 0.2, 0.2);
-
-		StdDraw.setPenColor(StdDraw.BOOK_RED);
-		StdDraw.setPenRadius(0.02);
-		StdDraw.arc(0.8, 0.2, 0.1, 200, 45);
-
-		// draw a blue diamond
-		StdDraw.setPenRadius();
-		StdDraw.setPenColor(StdDraw.BOOK_BLUE);
-		double[] x = { 0.1, 0.2, 0.3, 0.2 };
-		double[] y = { 0.2, 0.3, 0.2, 0.1 };
-		StdDraw.filledPolygon(x, y);
-
-		// text
-		StdDraw.setPenColor(StdDraw.BLACK);
-		StdDraw.text(0.2, 0.5, "black text");
-		StdDraw.setPenColor(StdDraw.WHITE);
-		StdDraw.text(0.8, 0.8, "white text");
-	}
-
-}
-
-
-//Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne. 
-//Last updated: Mon Aug 27 16:43:47 EDT 2018.
+	//Copyright © 2000–2017, Robert Sedgewick and Kevin Wayne. 
+	//Last updated: Mon Aug 27 16:43:47 EDT 2018.
