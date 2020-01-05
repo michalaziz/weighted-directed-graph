@@ -23,7 +23,7 @@ import utils.Point3D;
  *
  */
 
-public class Graph_Algo implements graph_algorithms{
+public class Graph_Algo implements graph_algorithms,Serializable{
 	public graph graph_A;
 	public static double infinity = Double.POSITIVE_INFINITY;
 
@@ -36,6 +36,11 @@ public class Graph_Algo implements graph_algorithms{
 	public Graph_Algo(DGraph g) {
 		this.graph_A=g;
 	}
+	
+	public Graph_Algo(graph g) {
+		this.graph_A=g;
+	}
+	
 
 	/**
 	 * Initialization this set of algorithms on parameter g.
@@ -52,23 +57,25 @@ public class Graph_Algo implements graph_algorithms{
 	 */
 	@Override
 	public void init(String file_name) {
-		System.out.println("got in init");
-		graph g= this.graph_A;
-		File f= new File (file_name); 
-		try {
-			FileInputStream fis= new FileInputStream(f);
-			ObjectInputStream ois= new ObjectInputStream(fis);
-			g= (graph) ois.readObject();
-			ois.close();
-			fis.close();
+		try {    
+			FileInputStream file = new FileInputStream(file_name); 
+			ObjectInputStream in = new ObjectInputStream(file);  
+			graph_A = (graph) in.readObject(); 
+			in.close(); 
+			file.close();   
+			System.out.println("Object has been deserialized"); 
 
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		} 
+
+		catch(IOException ex) 
+		{ 
+			System.out.println("IOException is caught"); 
+		} 
+
+		catch(ClassNotFoundException ex) 
+		{ 
+			System.out.println("ClassNotFoundException is caught"); 
+		} 		
 	}
 
 	/**
@@ -101,9 +108,12 @@ public class Graph_Algo implements graph_algorithms{
 	 */
 	@Override
 	public boolean isConnected() {
-
-		setTag_0(this.graph_A);
 		Collection<node_data> vertex = this.graph_A.getV();
+		if(vertex.size()==0)
+			return true;
+		if(vertex.size()==1)
+			return true;
+		setTag_0(this.graph_A);
 		Iterator<node_data> it=vertex.iterator();
 		node_data v1= (node_data)it.next();
 		dfsWithoutRecursion(v1);
@@ -173,6 +183,12 @@ public class Graph_Algo implements graph_algorithms{
 		List<node_data> Nodes = new ArrayList<node_data>();
 		List<node_data> temp = new ArrayList<node_data>();
 		List<node_data> res = new ArrayList<node_data>();
+		
+		for(Integer key :targets)
+		{
+			if(graph_A.getE(key)==null)//the targets list is not connect
+				throw new RuntimeException("the targets list is disconnect");
+		}
 
 		for (Integer key : targets) {
 			if(graph_A.getNode(key)==null) {
@@ -273,6 +289,8 @@ public class Graph_Algo implements graph_algorithms{
 			node_data current = stack.pop();
 			current.setTag(1);
 			eColl= this.graph_A.getE(current.getKey());
+			if(eColl==null)
+				return;
 			for(edge_data edge :eColl)
 			{
 				if( this.graph_A.getNode(edge.getDest()).getTag() == 0 && this.graph_A.getE(edge.getDest()) != null)
@@ -317,112 +335,10 @@ public class Graph_Algo implements graph_algorithms{
 			throw new RuntimeException(" there is no path between src and dest ");
 		else{return this.graph_A.getNode(dest.getKey()).getWeight();}
 	}
-
-
-
-
-
+	
 	public static void main(String args[])
 	{
-		DGraph d_g = new DGraph();
-		Graph_Algo g_a = new Graph_Algo();
-		Point3D x = new Point3D(10, 20, 3);
-		Point3D y = new Point3D(-10, -20, -3);
-		Point3D z = new Point3D(20, 40, 8);
-		Point3D w = new Point3D(-32, 30, 9);
-		Point3D s = new Point3D(40, -20, 0);
-		Point3D j = new Point3D(90, 10, -8);
-
-
-//		node_data a_0 = new Node(0, 3, 2, x, "michal");
-//		node_data b_1 = new Node(1, 4, 3, y, "yarden");
-//		node_data c_2 = new Node(2, 5, 4, z, "sf");
-//		node_data d_3 = new Node(3, 5, 6, s, "s");
-//		node_data e_4 = new Node(4, 9, 6, w, "tt");
-//		node_data f_5 = new Node(5, 9, 6, w, "tt");
-
-		node_data a_0 = new Node(1, 3, 2, x, "michal");
-		node_data a_1 = new Node(2, 3, 2, y, "michal");
-		node_data a_2 = new Node(3, 3, 2, z, "michal");
-		node_data a_3 = new Node(7, 3, 2, w, "michal");
-		d_g.addNode(a_0);
-		d_g.addNode(a_1);
-		d_g.addNode(a_2);
-		d_g.addNode(a_3);
-		d_g.connect(a_0.getKey(), a_1.getKey(), 10);
-		d_g.connect(a_1.getKey(), a_0.getKey(), 10);
-		d_g.connect(a_0.getKey(), a_2.getKey(), 10);
-		d_g.connect(a_2.getKey(), a_3.getKey(), 10);
-//		d_g.addNode(b_1);
-//		d_g.addNode(c_2);
-//		d_g.addNode(d_3);
-//		d_g.addNode(e_4);
-//		d_g.addNode(f_5);
-
-//		d_g.connect(a_0.getKey(), b_1.getKey(), 10);
-//		d_g.connect(a_0.getKey(), e_4.getKey(), 5);
-//		d_g.connect(b_1.getKey(), e_4.getKey(), 2);
-//		d_g.connect(b_1.getKey(), c_2.getKey(), 1);
-//		d_g.connect(c_2.getKey(), d_3.getKey(), 4);
-//		d_g.connect(d_3.getKey(), a_0.getKey(), 7);
-//		d_g.connect(d_3.getKey(), c_2.getKey(), 6);
-//		d_g.connect(e_4.getKey(), d_3.getKey(), 2);
-//		d_g.connect(e_4.getKey(), c_2.getKey(), 9);
-//		d_g.connect(f_5.getKey(), b_1.getKey(), 3);
-//		d_g.connect(f_5.getKey(), c_2.getKey(), 14);
-//		d_g.connect(c_2.getKey(), f_5.getKey(), 20);
-
-		List<Integer> targets=new ArrayList<>();
-		targets.add(2);
-		targets.add(7);
-		g_a.init(d_g); // this graph is connected
-		g_a.TSP(targets);
 		
-//		g_a.save("pleaseee.txt");
-
-		//	System.out.println(g_a.isConnected());
-		//System.out.println(g_a.shortestPath(3,1));
-		
-//		Graph_Algo ga = new Graph_Algo();
-//		ga.graph_A.addNode(new Node(0,0,0,new Point3D(0, 0),"ra"));
-//		ga.graph_A.addNode(new Node(1,0,0,new Point3D(-10,-10), "li"));
-//		ga.graph_A.addNode(new Node(2,0,0,new Point3D(10,10), "ra"));
-//		ga.graph_A.addNode(new Node(3,0,0,new Point3D(-10,10), "li"));
-//		ga.graph_A.addNode(new Node(4,0,0,new Point3D(0,-20), "ra"));
-//		ga.graph_A.addNode(new Node(5,0,0,new Point3D(10, -10),"li"));
-//
-//		ga.graph_A.connect(0,1, 1);
-//		ga.graph_A.connect(1,0, 1.5);
-//		ga.graph_A.connect(0,2, 0);
-//		ga.graph_A.connect(2,0, 2);
-//		ga.graph_A.connect(0,3, 5);
-//		ga.graph_A.connect(3,0, 4);
-//		ga.graph_A.connect(0,4, 2);
-//		ga.graph_A.connect(4,0, 3);
-//		ga.graph_A.connect(0,5, 1.2);
-//		ga.graph_A.connect(5,0, 2.5);
-//
-//		List<Integer> targets=new ArrayList<>();
-//		targets.add(1);
-//		targets.add(0);
-//		targets.add(2);
-//		targets.add(3);
-//		targets.add(4);
-//		targets.add(5);
-//
-//		List<node_data> ans=ga.TSP(targets);
-//		List<node_data> myAns=new ArrayList<>();
-//		myAns.add(ga.graph_A.getNode(1));
-//		myAns.add(ga.graph_A.getNode(0));
-//		myAns.add(ga.graph_A.getNode(2));
-//		myAns.add(ga.graph_A.getNode(0));
-//		myAns.add(ga.graph_A.getNode(3));
-//		myAns.add(ga.graph_A.getNode(0));
-//		myAns.add(ga.graph_A.getNode(4));
-//		myAns.add(ga.graph_A.getNode(0));
-//		myAns.add(ga.graph_A.getNode(5));
-//		
-//		ans=ga.TSP(targets);
-			
 	}
+
 }
