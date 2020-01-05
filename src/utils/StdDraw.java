@@ -1,4 +1,3 @@
-
 package utils;
 
 //package stdDraw;
@@ -69,6 +68,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -123,7 +123,7 @@ import gui.Graph_GUI;
  *  If you compile and execute the program, you should see a window
  *  appear with a thick magenta line and a blue point.
  *  This program illustrates the two main types of methods in standard
- *  drawingג€”methods that draw geometric shapes and methods that
+ *  drawing—methods that draw geometric shapes and methods that
  *  control drawing parameters.
  *  The methods {@code StdDraw.line()} and {@code StdDraw.point()}
  *  draw lines and points; the methods {@code StdDraw.setPenRadius()}
@@ -318,7 +318,7 @@ import gui.Graph_GUI;
  *  or rescale it to fit snugly inside a width-by-height bounding box.
  *  <p>
  *  <b>Saving to a file.</b>
- *  You save your image to a file using the <em>File ג†’ Save</em> menu option.
+ *  You save your image to a file using the <em>File → Save</em> menu option.
  *  You can also save a file programatically using the following method:
  *  <ul>
  *  <li> {@link #save(String filename)}
@@ -354,7 +354,7 @@ import gui.Graph_GUI;
  *  <p>
  *  By default, double buffering is disabled, which means that as soon as you
  *  call a drawing
- *  methodג€”such as {@code point()} or {@code line()}ג€”the
+ *  method—such as {@code point()} or {@code line()}—the
  *  results appear on the screen.
  *  <p>
  *  When double buffering is enabled by calling {@link #enableDoubleBuffering()},
@@ -444,7 +444,7 @@ import gui.Graph_GUI;
  *  <li> Any method that is passed a {@code null} argument will throw an
  *       {@link IllegalArgumentException}.
  *  <li> Except as noted in the APIs, drawing an object outside (or partly outside)
- *       the canvas is permittedג€”however, only the part of the object that
+ *       the canvas is permitted—however, only the part of the object that
  *       appears inside the canvas will be visible.
  *  <li> Except as noted in the APIs, all methods accept {@link Double#NaN},
  *       {@link Double#POSITIVE_INFINITY}, and {@link Double#NEGATIVE_INFINITY}
@@ -452,7 +452,7 @@ import gui.Graph_GUI;
  *       that is NaN will behave as if it is outside the canvas, and will not be visible.
  *  <li> Due to floating-point issues, an object drawn with an <em>x</em>- or
  *       <em>y</em>-coordinate that is way outside the canvas (such as the line segment
- *       from (0.5, ג€“&infin;) to (0.5, &infin;) may not be visible even in the
+ *       from (0.5, –&infin;) to (0.5, &infin;) may not be visible even in the
  *       part of the canvas where it should be.
  *  </ul>
  *  <p>
@@ -770,8 +770,8 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 		JMenu menuAlgo = new JMenu("Algorithems");
 		menuBar.add(menuAlgo);
 		JMenuItem isConnected = new JMenuItem("Is Connected");
-		JMenuItem shortestPathDist = new JMenuItem("shortest Path Dist");
-		JMenuItem shortestPath = new JMenuItem("shortest Path");
+		JMenuItem shortestPathDist = new JMenuItem("Shortest Path Dist");
+		JMenuItem shortestPath = new JMenuItem("Shortest Path");
 		JMenuItem TSP = new JMenuItem("TSP");
 		menuAlgo.add(isConnected);
 		menuAlgo.add(shortestPathDist);
@@ -1253,7 +1253,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 * Draws a polygon with the vertices
 	 * (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>),
 	 * (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), ...,
-	 * (<em>x</em><sub><em>n</em>ג€“1</sub>, <em>y</em><sub><em>n</em>ג€“1</sub>).
+	 * (<em>x</em><sub><em>n</em>–1</sub>, <em>y</em><sub><em>n</em>–1</sub>).
 	 *
 	 * @param  x an array of all the <em>x</em>-coordinates of the polygon
 	 * @param  y an array of all the <em>y</em>-coordinates of the polygon
@@ -1282,7 +1282,7 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	 * Draws a polygon with the vertices
 	 * (<em>x</em><sub>0</sub>, <em>y</em><sub>0</sub>),
 	 * (<em>x</em><sub>1</sub>, <em>y</em><sub>1</sub>), ...,
-	 * (<em>x</em><sub><em>n</em>ג€“1</sub>, <em>y</em><sub><em>n</em>ג€“1</sub>).
+	 * (<em>x</em><sub><em>n</em>–1</sub>, <em>y</em><sub><em>n</em>–1</sub>).
 	 *
 	 * @param  x an array of all the <em>x</em>-coordinates of the polygon
 	 * @param  y an array of all the <em>y</em>-coordinates of the polygon
@@ -1356,7 +1356,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 	/*
     private static BufferedImage getImage(String filename) {
         if (filename == null) throw new IllegalArgumentException();
-
         // from a file or URL
         try {
             URL url = new URL(filename);
@@ -1366,7 +1365,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         catch (IOException e) {
             // ignore
         }
-
         // in case file is inside a .jar (classpath relative to StdDraw)
         try {
             URL url = StdDraw.class.getResource(filename);
@@ -1376,7 +1374,6 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
         catch (IOException e) {
             // ignore
         }
-
         // in case file is inside a .jar (classpath relative to root of jar)
         try {
             URL url = StdDraw.class.getResource("/" + filename);
@@ -1833,16 +1830,16 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 			try {
 				boolean ans= gGui.get_gAlgo().isConnected();
 				if(ans==true)
-					JOptionPane.showMessageDialog(null, "The graph is  connect", "Is Connect", 2);
+					JOptionPane.showMessageDialog(null, "The graph is CONNECT", "Is Connect", 2);
 
 				else
-					JOptionPane.showMessageDialog(null, "The graph is diconnect", "Is Connect", 0);
+					JOptionPane.showMessageDialog(null, "The graph is DISCONNECT", "Is Connect", 0);
 			}catch(Exception e1) {
 				JOptionPane.showMessageDialog(null, "Error has been occurs", "Message", 0);
 			}
 			break;
 
-		case "shortest Path Dist":
+		case "Shortest Path Dist":
 			try {
 				String src = JOptionPane.showInputDialog(null, "Enter sourc: ");
 				String dest = JOptionPane.showInputDialog(null, "Enter destination: ");
@@ -1851,26 +1848,55 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 
 			}
 			catch (Exception e2) {
-				JOptionPane.showMessageDialog(null, "Please choose valid numbers");		
+				JOptionPane.showMessageDialog(null, "Error has been occurs");		
 			}
 			break;
 		case"Shortest Path":
 			try {
 				String src = JOptionPane.showInputDialog(null, "Enter sourc: ");
 				String dest = JOptionPane.showInputDialog(null, "Enter destination: ");
-				List<node_data> ans = gGui.get_gAlgo().shortestPath(Integer.parseInt(src), Integer.parseInt(dest));
-				String s = "";
-				for (node_data n: ans) {
-					s = s + (((Node) n).keytoString())+"->";
+				List<node_data> shortest = new ArrayList<node_data>();
+				shortest= gGui.get_gAlgo().shortestPath(Integer.parseInt(src), Integer.parseInt(dest));
+				Iterator<node_data> iter = shortest.iterator();
+				String s= "";
+				while(iter.hasNext())
+				{
+					s+=(((Node)iter.next()).keytoString());
+					if(!iter.hasNext())
+						break;
+					s+="->";
 				}
 				JOptionPane.showMessageDialog(null,"The shortest Path is: "+s);		
 			}
 			catch (Exception e2) {
-				JOptionPane.showMessageDialog(null, "Please choose valid numbers");		
+				JOptionPane.showMessageDialog(null, "Error has been occurs");		
 			}
 			break;
 		case "TSP":
-			
+			try {
+			List<Integer> targets = new ArrayList<>();
+			List<node_data> resTSP = new ArrayList<node_data>();
+			String trg="",s="";
+			while(true)
+			{
+				trg = JOptionPane.showInputDialog(null, "Enter vertex one by one press / to end:");
+				if(trg.equals("/"))
+					break;
+				targets.add(Integer.parseInt(trg));
+			}
+			resTSP=gGui.get_gAlgo().TSP(targets);
+			Iterator<node_data> iter = resTSP.iterator();
+			while(iter.hasNext())
+			{
+				s+=(((Node)iter.next()).keytoString());
+				if(!iter.hasNext())
+					break;
+				s+="->";
+			}
+			JOptionPane.showMessageDialog(null,"The TSP is: "+s);
+			}catch(Exception e2) {
+				JOptionPane.showMessageDialog(null,"Error has been occurs");
+			}
 			break;
 		}
 
