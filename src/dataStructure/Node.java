@@ -5,7 +5,7 @@ import java.io.Serializable;
 import utils.Point3D;
 
 
-public class Node implements node_data,Serializable  {
+public class Node implements node_data,Serializable, Comparable<node_data>  {
 
 	 private int key;
 	 private double weight= Double.MAX_VALUE;
@@ -89,5 +89,10 @@ public class Node implements node_data,Serializable  {
 	public void setTag(int t) {
 		this.tag=t;
 
+	}
+	@Override
+	public int compareTo(node_data o) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

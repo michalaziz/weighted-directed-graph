@@ -67,7 +67,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.TreeSet;
 import java.util.NoSuchElementException;
@@ -85,6 +86,7 @@ import javax.swing.KeyStroke;
 import algorithms.Graph_Algo;
 import dataStructure.Node;
 import dataStructure.graph;
+import dataStructure.node_data;
 import gui.Graph_GUI;
 
 /**
@@ -1803,6 +1805,17 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				System.out.println("cant remove this key");
 			}
 			break;
+		case "Connect":
+			try {
+				String  src =JOptionPane.showInputDialog(null, "Enter source: ");
+				String  dest =JOptionPane.showInputDialog(null, "Enter destenation: ");
+				String weight=JOptionPane.showInputDialog(null, "Enter Weight: ");
+				gGui.get_gAlgo().graph_A.connect(Integer.parseInt(src), Integer.parseInt(dest),Double.parseDouble(weight));
+				gGui.initGUI();
+			}catch(Exception e3) {
+				System.out.println("cant creat this edge");
+			}
+			break;
 		case "Remove Edge":
 			try {
 				String  src =JOptionPane.showInputDialog(null, "Enter source: ");
@@ -1813,9 +1826,88 @@ public final class StdDraw implements ActionListener, MouseListener, MouseMotion
 				System.out.println("cant remove this edge");
 			}
 			break;
+		case "Is Connected":
+			if(gGui.get_graph().nodeSize()==0)
+				break;
+			boolean ans= gGui.get_gAlgo().isConnected();
+			if(ans==true)
+				JOptionPane.showMessageDialog(null, "The graph is  connect", "Is Connect", 2);
+
+			else
+				JOptionPane.showMessageDialog(null, "The graph is diconnect", "Is Connect", 0);
+			break;
+
+		case "shortest Path Dist":
+			try {
+				String src = JOptionPane.showInputDialog(null, "Enter sourc: ");
+				String dest = JOptionPane.showInputDialog(null, "Enter destination: ");
+				double res = gGui.get_gAlgo().shortestPathDist(Integer.parseInt(src), Integer.parseInt(dest));
+				JOptionPane.showMessageDialog(null,"The shortest Path Distence is: "+ res);		
+
+			}
+			catch (Exception e2) {
+				JOptionPane.showMessageDialog(null, "Please choose valid numbers");		
+			}
+			break;
+		case"Shortest Path":
+			break;
+		case "TSP":
+			break;
 		}
 
+
 	}
+	
+//	private double path(StringBuilder sb) {
+//		Collection<node_data> points = gGui.get_graph().getV();
+//		if(points.isEmpty()) return Double.POSITIVE_INFINITY;
+//		String[] arr = new String[points.size()];
+//		int j = 0;
+//		for (node_data node : points) {
+//			arr[j] = node.getKey() + "";
+//			j++;
+//		}
+//		gGui.drawEdges();
+//		gGui.drawPoints();
+//
+//
+//		Object selectedNodeSrc = JOptionPane.showInputDialog(null, "Choose src node", "Message",
+//
+//				JOptionPane.INFORMATION_MESSAGE, null, arr, arr[0]);
+//		if(selectedNodeSrc==null) return Double.POSITIVE_INFINITY;
+//
+//		Object selectedNodeDest = JOptionPane.showInputDialog(null, "Choose dest node", "Message",
+//
+//				JOptionPane.INFORMATION_MESSAGE, null, arr, arr[0]);
+//		if(selectedNodeDest==null) return Double.POSITIVE_INFINITY;
+//
+//		int src = Integer.parseInt((String) selectedNodeSrc);
+//		int dest = Integer.parseInt((String) selectedNodeDest);
+//		if (src==dest) {
+//			JOptionPane.showMessageDialog(null, "You choose the same node for src and dest,\n so the shorest path is 0.","Messege",2);
+//			return Double.POSITIVE_INFINITY;
+//		}
+//		StdDraw.setPenRadius(0.005);
+//		StdDraw.setPenColor(Color.green);
+//		if(gGui.get_gAlgo().shortestPath(src, dest)==null) 
+//			JOptionPane.showMessageDialog(null, "The isn't a path between those two nodes","Messege",0);
+//
+//		else {
+//			ArrayList<node_data> lista = (ArrayList<node_data>) gGui.get_gAlgo().shortestPath(src, dest);
+//			for (int i = 0; i < lista.size() - 1; i++) {
+//
+//				line(lista.get(i).getLocation().x(), lista.get(i).getLocation().y(), lista.get(i + 1).getLocation().x(),
+//						lista.get(i + 1).getLocation().y());
+//
+//				sb.append(lista.get(i).toString()+"->");
+//			}
+//			sb.append(dest+"");
+//
+//		}
+//		return (gGui.get_gAlgo().shortestPathDist(src, dest));
+//
+//	}
+
 
 
 

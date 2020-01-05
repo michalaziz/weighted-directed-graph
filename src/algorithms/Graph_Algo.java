@@ -12,6 +12,8 @@ import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+
 import dataStructure.*;
 import utils.Point3D;
 /**
@@ -168,38 +170,68 @@ public class Graph_Algo implements graph_algorithms{
 
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
+		List<node_data> Nodes = new ArrayList<node_data>();
+		List<node_data> temp = new ArrayList<node_data>();
+		List<node_data> ans = new ArrayList<node_data>();
 
-
-		Iterator<Integer> iter= targets.iterator();
-		
-		List<node_data> path = new ArrayList<node_data>();
-
-		while(iter.hasNext()&&path.isEmpty())
-		{
-			path=isVisit(iter.next(),targets);
-		}
-
-		return path;
-	}
-	/*temp*/
-	private List<node_data> isVisit (Integer current , List<Integer>tNodes)
-	{
-		List<node_data> path =new ArrayList<node_data>();
-		Iterator<edge_data> iter=graph_A.getE(graph_A.getNode(current).getKey()).iterator();
-		Iterator<Integer> iter2= tNodes.iterator();
-		while(iter.hasNext())
-		{
-			edge_data tempEdge =iter.next();
-			path.add(graph_A.getNode(current));
-			path.add(graph_A.getNode(tempEdge.getDest()));
-		}
-		for(int i=0; i<tNodes.size(); i++)
-			if(!path.contains(graph_A.getNode(iter2.next())))
-			{
-				path.clear();
-				return path;
+		for (Integer key : targets) {
+			if(graph_A.getNode(key)==null) {
+				return null;
 			}
-		return path;
+			Nodes.add(graph_A.getNode(key));
+		}
+
+		for(int i=0; i<Nodes.size()-1; i++) {
+			List<node_data> list = new ArrayList<node_data>();
+
+			list = (ArrayList<node_data>) shortestPath(Nodes.get(i).getKey(), Nodes.get(i+1).getKey());
+
+			if(list==null) {
+				return null;
+			}
+			for(int j=0; j<list.size(); j++) {
+				temp.add(list.get(j));
+			}
+		}
+		if(temp.size() % 2 == 0) {
+			for(int i=0; i<temp.size(); i++) {
+				if(i == temp.size()-1) {
+					if(temp.get(i-1) != temp.get(i)) {
+						ans.add(temp.get(i));
+					}
+				}
+				else if(temp.get(i) == temp.get(i+1)) {
+					ans.add(temp.get(i));
+					i++;
+				}
+				else {
+					ans.add(temp.get(i));
+				}
+			}
+		}
+		else {
+			for(int i=0; i<temp.size()-1; i++) {
+				if(i == temp.size()-2) {
+					if(temp.get(i) == temp.get(i+1)) {
+						ans.add(temp.get(i));
+						i++;
+					}
+					else {
+						ans.add(temp.get(i));
+						ans.add(temp.get(i+1));
+					}
+				}
+
+				if(temp.get(i) == temp.get(i+1)) {
+					ans.add(temp.get(i));
+					i++;
+				}
+				else {
+					ans.add(temp.get(i));
+				}
+			}
+		}
+		return ans;	
 	}
 
 	/**
