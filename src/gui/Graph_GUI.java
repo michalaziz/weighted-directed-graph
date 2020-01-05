@@ -145,43 +145,4 @@ public class Graph_GUI extends JFrame implements Serializable {
 			}
 		}
 	}
-	public static void main(String args[]) {
-
-		DGraph dg = new DGraph();
-
-		Point3D p1 = new Point3D(0,0,0);
-		Point3D p2 = new Point3D(0,-30,0);
-		Point3D p3 = new Point3D(40,10,0);
-		Point3D p4 = new Point3D(80,0,0);
-		Point3D p5 = new Point3D(-40,10,0);
-		Point3D p6 = new Point3D(-80,0,0);
-
-		Node n1 = new Node(1,1,1,p1,"1");
-		Node n2 = new Node(2,2,2,p2,"2");
-		Node n3 = new Node(3,3,3,p3,"3");
-		Node n4 = new Node(4,4,4,p4,"4");
-		Node n5 = new Node(5,5,5,p5,"5");
-		Node n6 = new Node(6,6,6,p6,"16");
-		
-		dg.addNode(n1);
-		dg.addNode(n2);
-		dg.addNode(n3);
-		dg.addNode(n4);
-		dg.addNode(n5);
-		dg.addNode(n6);
-		
-		dg.connect(1, 5, 1);
-		dg.connect(5, 6, 2);
-		dg.connect(6, 2, 3);
-		dg.connect(2, 4, 4);
-		dg.connect(4, 3, 5);
-		dg.connect(3, 1, 6);
-		
-		Graph_GUI gui = new Graph_GUI(dg);
-		
-		
-	}
-
-
-
 }
