@@ -1,12 +1,9 @@
 package dataStructure;
 
-<<<<<<< HEAD
 import java.io.Serializable;
 
 public class Edge implements edge_data,Serializable {
-=======
-public class Edge implements edge_data{
->>>>>>> branch 'master' of https://github.com/michalaziz/oop-Ex2.git
+
 
 	private int src; 
 	private int dest;
